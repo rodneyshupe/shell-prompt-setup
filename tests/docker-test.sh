@@ -41,6 +41,10 @@ echo "--- 2b. existing directories keep their mode and owner"
 chmod 750 /home/alice; bash /repo/install.sh --users alice --force >/dev/null; [ "$(stat -c %a /home/alice)" = 750 ] || fail "home mode changed"
 [ "$(stat -c %U /home/alice/.config)" = alice ] || fail ".config owner"
 
+echo "--- 2c. starship prints no config warnings with the packaged version ($(starship --version | head -1))"
+w=$(su alice -c "zsh -i -c \"starship prompt\"" 2>&1 >/dev/null | sed "s/\x1b\[[0-9;]*m//g" | grep -a WARN || true)
+[ -z "$w" ] || fail "starship warnings: $w"
+
 echo "--- 3. idempotent re-run, and non-interactive commands still work"
 bash /repo/install.sh --users root,alice --shell --vip 10.0.0.10 | grep -c "already up to date" | grep -qv "^0$" || fail "re-run not idempotent"
 su alice -c "true" && su alice -c "echo \$0 | grep -q zsh"

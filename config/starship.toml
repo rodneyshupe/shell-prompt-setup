@@ -334,12 +334,10 @@ symbol = "zig "
 # Every language module below is triggered by project markers only (Cargo.toml, package.json,
 # go.mod, ...), never by a lone *.rs / *.js / *.go in a folder such as ~/Downloads.
 # The ones marked (ext-only) have no marker besides the extension, so they never show.
+# (cpp and fortran are left out on purpose: Starship 1.22 on Debian 13 has no such tables and
+# warns about unknown keys on every prompt.)
 
-[cpp]
-detect_extensions = []  # (ext-only)
 
-[fortran]
-detect_extensions = []
 
 [haskell]
 detect_extensions = []
