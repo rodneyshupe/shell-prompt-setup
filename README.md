@@ -93,6 +93,10 @@ otherwise BSD `ls -G`); `~/.local/bin` on `PATH`.
   in `format` (these look uneven in some fonts).
 - Remove: `chsh -s /bin/bash <user>`, delete `~/.zshrc ~/.zprofile ~/.config/starship.toml ~/.zshrc.local`.
 
+## Design notes
+
+Why it looks like this, what was tried and rejected, and the Starship format-string traps: [docs/design.md](docs/design.md).
+
 ## Tests
 
 `tests/docker-test.sh [image]` runs the installer in a clean Debian container (default `debian:trixie`): dry run,
