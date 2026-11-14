@@ -62,6 +62,13 @@ fi
 ssh() { LC_PROMPT_HOPS=$(( ${PROMPT_HOPS:-0} + 1 )) command ssh -o SendEnv=LC_PROMPT_HOPS "$@"; }
 
 # Start Starship for the shell that is running this file.
+if ! command -v starship >/dev/null 2>&1; then
+  # A fresh macOS login shell has no Homebrew on PATH yet (the zsh setup adds it later in ~/.zshrc).
+  for _sps_b in /opt/homebrew/bin /usr/local/bin "$HOME/.local/bin"; do
+    [ -x "$_sps_b/starship" ] && { PATH="$PATH:$_sps_b"; export PATH; break; }
+  done
+  unset _sps_b
+fi
 if command -v starship >/dev/null 2>&1; then
   if [ -n "${ZSH_VERSION:-}" ]; then
     eval "$(starship init zsh)"
