@@ -1,0 +1,3 @@
+# shell-prompt-setup (Linux login shells): pull in Debian's /etc/profile (root PATH incl. sbin,
+# /etc/profile.d/*) the way bash does; zsh doesn't read it on its own.
+emulate sh -c '. /etc/profile'
