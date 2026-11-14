@@ -1,0 +1,147 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="716" height="216" viewBox="0 0 716 216" role="img" aria-label="Powerline prompt, powerline-shell (install-powerline.sh, macOS)">
+<rect width="100%" height="100%" rx="9" fill="#1e1e1e"/>
+<rect width="100%" height="28" rx="9" fill="#2d2d2d"/><rect y="14" width="100%" height="14" fill="#2d2d2d"/>
+<circle cx="18" cy="14" r="5.5" fill="#ff5f56"/><circle cx="37" cy="14" r="5.5" fill="#ffbd2e"/><circle cx="56" cy="14" r="5.5" fill="#27c93f"/>
+<text x="358" y="18" fill="#9d9d9d" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12">Powerline prompt, powerline-shell (install-powerline.sh, macOS)</text>
+<g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', monospace" font-size="14">
+<text x="18" y="56" fill="#8b8b8b" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12">Powerline look (needs a Powerline-patched font)</text>
+<rect x="18.00" y="66.00" width="84.00" height="20" fill="#444444"/>
+<rect x="102.00" y="66.00" width="8.40" height="20" fill="#585858"/>
+<rect x="110.40" y="66.00" width="58.80" height="20" fill="#585858"/>
+<rect x="169.20" y="66.00" width="8.40" height="20" fill="#444444"/>
+<rect x="177.60" y="66.00" width="67.20" height="20" fill="#444444"/>
+<rect x="244.80" y="66.00" width="8.40" height="20" fill="#0087af"/>
+<rect x="253.20" y="66.00" width="25.20" height="20" fill="#0087af"/>
+<rect x="278.40" y="66.00" width="8.40" height="20" fill="#3a3a3a"/>
+<rect x="286.80" y="66.00" width="75.60" height="20" fill="#3a3a3a"/>
+<rect x="362.40" y="66.00" width="8.40" height="20" fill="#3a3a3a"/>
+<rect x="370.80" y="66.00" width="42.00" height="20" fill="#3a3a3a"/>
+<rect x="412.80" y="66.00" width="8.40" height="20" fill="#d7005f"/>
+<rect x="421.20" y="66.00" width="50.40" height="20" fill="#d7005f"/>
+<rect x="471.60" y="66.00" width="8.40" height="20" fill="#585858"/>
+<rect x="480.00" y="66.00" width="33.60" height="20" fill="#585858"/>
+<rect x="513.60" y="66.00" width="8.40" height="20" fill="#af5f00"/>
+<rect x="522.00" y="66.00" width="25.20" height="20" fill="#af5f00"/>
+<rect x="547.20" y="66.00" width="8.40" height="20" fill="#5f0000"/>
+<rect x="555.60" y="66.00" width="25.20" height="20" fill="#5f0000"/>
+<rect x="580.80" y="66.00" width="8.40" height="20" fill="#303030"/>
+<rect x="589.20" y="66.00" width="25.20" height="20" fill="#303030"/>
+<text x="18.00" y="80.00" fill="#bcbcbc" textLength="84.00" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> 03:30 PM </text>
+<polygon points="102.00,66.00 110.40,76.00 102.00,86.00" fill="#444444"/>
+<text x="110.40" y="80.00" fill="#bcbcbc" textLength="58.80" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> alice </text>
+<polygon points="169.20,66.00 177.60,76.00 169.20,86.00" fill="#585858"/>
+<text x="177.60" y="80.00" fill="#bcbcbc" textLength="67.20" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> laptop </text>
+<polygon points="244.80,66.00 253.20,76.00 244.80,86.00" fill="#444444"/>
+<text x="253.20" y="80.00" fill="#ffffff" textLength="25.20" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> ~ </text>
+<polygon points="278.40,66.00 286.80,76.00 278.40,86.00" fill="#0087af"/>
+<text x="286.80" y="80.00" fill="#bcbcbc" textLength="75.60" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> project </text>
+<polyline points="362.40,66.00 370.80,76.00 362.40,86.00" fill="none" stroke="#808080" stroke-width="1.2"/>
+<text x="370.80" y="80.00" fill="#e4e4e4" textLength="42.00" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> src </text>
+<polygon points="412.80,66.00 421.20,76.00 412.80,86.00" fill="#3a3a3a"/>
+<text x="421.20" y="80.00" fill="#ffffff" textLength="50.40" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> main </text>
+<polygon points="471.60,66.00 480.00,76.00 471.60,86.00" fill="#d7005f"/>
+<text x="480.00" y="80.00" fill="#bcbcbc" textLength="33.60" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> 2⬆ </text>
+<polygon points="513.60,66.00 522.00,76.00 513.60,86.00" fill="#585858"/>
+<text x="522.00" y="80.00" fill="#ffffff" textLength="25.20" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> ✎ </text>
+<polygon points="547.20,66.00 555.60,76.00 547.20,86.00" fill="#af5f00"/>
+<text x="555.60" y="80.00" fill="#ffffff" textLength="25.20" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> ? </text>
+<polygon points="580.80,66.00 589.20,76.00 580.80,86.00" fill="#5f0000"/>
+<text x="589.20" y="80.00" fill="#ffffff" textLength="25.20" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> $ </text>
+<polygon points="614.40,66.00 622.80,76.00 614.40,86.00" fill="#303030"/>
+<rect x="639.60" y="69.00" width="8.40" height="14" fill="#d4d4d4" opacity="0.8"/>
+<text x="18" y="112" fill="#8b8b8b" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12">After a failed command (exit code segment)</text>
+<rect x="18.00" y="122.00" width="84.00" height="20" fill="#444444"/>
+<rect x="102.00" y="122.00" width="8.40" height="20" fill="#585858"/>
+<rect x="110.40" y="122.00" width="58.80" height="20" fill="#585858"/>
+<rect x="169.20" y="122.00" width="8.40" height="20" fill="#444444"/>
+<rect x="177.60" y="122.00" width="67.20" height="20" fill="#444444"/>
+<rect x="244.80" y="122.00" width="8.40" height="20" fill="#0087af"/>
+<rect x="253.20" y="122.00" width="25.20" height="20" fill="#0087af"/>
+<rect x="278.40" y="122.00" width="8.40" height="20" fill="#3a3a3a"/>
+<rect x="286.80" y="122.00" width="75.60" height="20" fill="#3a3a3a"/>
+<rect x="362.40" y="122.00" width="8.40" height="20" fill="#3a3a3a"/>
+<rect x="370.80" y="122.00" width="42.00" height="20" fill="#3a3a3a"/>
+<rect x="412.80" y="122.00" width="8.40" height="20" fill="#d7005f"/>
+<rect x="421.20" y="122.00" width="50.40" height="20" fill="#d7005f"/>
+<rect x="471.60" y="122.00" width="8.40" height="20" fill="#585858"/>
+<rect x="480.00" y="122.00" width="33.60" height="20" fill="#585858"/>
+<rect x="513.60" y="122.00" width="8.40" height="20" fill="#af5f00"/>
+<rect x="522.00" y="122.00" width="25.20" height="20" fill="#af5f00"/>
+<rect x="547.20" y="122.00" width="8.40" height="20" fill="#5f0000"/>
+<rect x="555.60" y="122.00" width="25.20" height="20" fill="#5f0000"/>
+<rect x="580.80" y="122.00" width="8.40" height="20" fill="#d7005f"/>
+<rect x="589.20" y="122.00" width="25.20" height="20" fill="#d7005f"/>
+<rect x="614.40" y="122.00" width="8.40" height="20" fill="#d7005f"/>
+<rect x="622.80" y="122.00" width="25.20" height="20" fill="#d7005f"/>
+<text x="18.00" y="136.00" fill="#bcbcbc" textLength="84.00" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> 03:30 PM </text>
+<polygon points="102.00,122.00 110.40,132.00 102.00,142.00" fill="#444444"/>
+<text x="110.40" y="136.00" fill="#bcbcbc" textLength="58.80" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> alice </text>
+<polygon points="169.20,122.00 177.60,132.00 169.20,142.00" fill="#585858"/>
+<text x="177.60" y="136.00" fill="#bcbcbc" textLength="67.20" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> laptop </text>
+<polygon points="244.80,122.00 253.20,132.00 244.80,142.00" fill="#444444"/>
+<text x="253.20" y="136.00" fill="#ffffff" textLength="25.20" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> ~ </text>
+<polygon points="278.40,122.00 286.80,132.00 278.40,142.00" fill="#0087af"/>
+<text x="286.80" y="136.00" fill="#bcbcbc" textLength="75.60" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> project </text>
+<polyline points="362.40,122.00 370.80,132.00 362.40,142.00" fill="none" stroke="#808080" stroke-width="1.2"/>
+<text x="370.80" y="136.00" fill="#e4e4e4" textLength="42.00" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> src </text>
+<polygon points="412.80,122.00 421.20,132.00 412.80,142.00" fill="#3a3a3a"/>
+<text x="421.20" y="136.00" fill="#ffffff" textLength="50.40" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> main </text>
+<polygon points="471.60,122.00 480.00,132.00 471.60,142.00" fill="#d7005f"/>
+<text x="480.00" y="136.00" fill="#bcbcbc" textLength="33.60" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> 2⬆ </text>
+<polygon points="513.60,122.00 522.00,132.00 513.60,142.00" fill="#585858"/>
+<text x="522.00" y="136.00" fill="#ffffff" textLength="25.20" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> ✎ </text>
+<polygon points="547.20,122.00 555.60,132.00 547.20,142.00" fill="#af5f00"/>
+<text x="555.60" y="136.00" fill="#ffffff" textLength="25.20" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> ? </text>
+<polygon points="580.80,122.00 589.20,132.00 580.80,142.00" fill="#5f0000"/>
+<text x="589.20" y="136.00" fill="#ffffff" textLength="25.20" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> $ </text>
+<polygon points="614.40,122.00 622.80,132.00 614.40,142.00" fill="#d7005f"/>
+<text x="622.80" y="136.00" fill="#ffffff" textLength="25.20" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> 1 </text>
+<polygon points="648.00,122.00 656.40,132.00 648.00,142.00" fill="#d7005f"/>
+<rect x="673.20" y="125.00" width="8.40" height="14" fill="#d4d4d4" opacity="0.8"/>
+<text x="18" y="168" fill="#8b8b8b" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12">Plain mode, for an ssh client listed with --plain-from</text>
+<rect x="18.00" y="178.00" width="84.00" height="20" fill="#444444"/>
+<rect x="102.00" y="178.00" width="8.40" height="20" fill="#585858"/>
+<rect x="110.40" y="178.00" width="58.80" height="20" fill="#585858"/>
+<rect x="169.20" y="178.00" width="8.40" height="20" fill="#444444"/>
+<rect x="177.60" y="178.00" width="92.40" height="20" fill="#444444"/>
+<rect x="270.00" y="178.00" width="8.40" height="20" fill="#0087af"/>
+<rect x="278.40" y="178.00" width="25.20" height="20" fill="#0087af"/>
+<rect x="303.60" y="178.00" width="8.40" height="20" fill="#3a3a3a"/>
+<rect x="312.00" y="178.00" width="75.60" height="20" fill="#3a3a3a"/>
+<rect x="387.60" y="178.00" width="8.40" height="20" fill="#3a3a3a"/>
+<rect x="396.00" y="178.00" width="42.00" height="20" fill="#3a3a3a"/>
+<rect x="438.00" y="178.00" width="8.40" height="20" fill="#d7005f"/>
+<rect x="446.40" y="178.00" width="50.40" height="20" fill="#d7005f"/>
+<rect x="496.80" y="178.00" width="8.40" height="20" fill="#585858"/>
+<rect x="505.20" y="178.00" width="33.60" height="20" fill="#585858"/>
+<rect x="538.80" y="178.00" width="8.40" height="20" fill="#af5f00"/>
+<rect x="547.20" y="178.00" width="25.20" height="20" fill="#af5f00"/>
+<rect x="572.40" y="178.00" width="8.40" height="20" fill="#5f0000"/>
+<rect x="580.80" y="178.00" width="25.20" height="20" fill="#5f0000"/>
+<rect x="606.00" y="178.00" width="8.40" height="20" fill="#303030"/>
+<rect x="614.40" y="178.00" width="25.20" height="20" fill="#303030"/>
+<text x="18.00" y="192.00" fill="#bcbcbc" textLength="84.00" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> 03:30 PM </text>
+<text x="102.00" y="192.00" fill="#444444" textLength="8.40" lengthAdjust="spacingAndGlyphs" xml:space="preserve">▶</text>
+<text x="110.40" y="192.00" fill="#bcbcbc" textLength="58.80" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> alice </text>
+<text x="169.20" y="192.00" fill="#585858" textLength="8.40" lengthAdjust="spacingAndGlyphs" xml:space="preserve">▶</text>
+<text x="177.60" y="192.00" fill="#bcbcbc" textLength="92.40" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> webserver </text>
+<text x="270.00" y="192.00" fill="#444444" textLength="8.40" lengthAdjust="spacingAndGlyphs" xml:space="preserve">▶</text>
+<text x="278.40" y="192.00" fill="#ffffff" textLength="25.20" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> ~ </text>
+<text x="303.60" y="192.00" fill="#0087af" textLength="8.40" lengthAdjust="spacingAndGlyphs" xml:space="preserve">▶</text>
+<text x="312.00" y="192.00" fill="#bcbcbc" textLength="75.60" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> project </text>
+<text x="387.60" y="192.00" fill="#808080" textLength="8.40" lengthAdjust="spacingAndGlyphs" xml:space="preserve">❯</text>
+<text x="396.00" y="192.00" fill="#e4e4e4" textLength="42.00" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> src </text>
+<text x="438.00" y="192.00" fill="#3a3a3a" textLength="8.40" lengthAdjust="spacingAndGlyphs" xml:space="preserve">▶</text>
+<text x="446.40" y="192.00" fill="#ffffff" textLength="50.40" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> main </text>
+<text x="496.80" y="192.00" fill="#d7005f" textLength="8.40" lengthAdjust="spacingAndGlyphs" xml:space="preserve">▶</text>
+<text x="505.20" y="192.00" fill="#bcbcbc" textLength="33.60" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> 2⬆ </text>
+<text x="538.80" y="192.00" fill="#585858" textLength="8.40" lengthAdjust="spacingAndGlyphs" xml:space="preserve">▶</text>
+<text x="547.20" y="192.00" fill="#ffffff" textLength="25.20" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> ✎ </text>
+<text x="572.40" y="192.00" fill="#af5f00" textLength="8.40" lengthAdjust="spacingAndGlyphs" xml:space="preserve">▶</text>
+<text x="580.80" y="192.00" fill="#ffffff" textLength="25.20" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> ? </text>
+<text x="606.00" y="192.00" fill="#5f0000" textLength="8.40" lengthAdjust="spacingAndGlyphs" xml:space="preserve">▶</text>
+<text x="614.40" y="192.00" fill="#ffffff" textLength="25.20" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> $ </text>
+<text x="639.60" y="192.00" fill="#303030" textLength="8.40" lengthAdjust="spacingAndGlyphs" xml:space="preserve">▶</text>
+<rect x="664.80" y="181.00" width="8.40" height="14" fill="#d4d4d4" opacity="0.8"/>
+</g>
+</svg>

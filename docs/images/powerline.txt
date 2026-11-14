@@ -1,0 +1,8 @@
+# Powerline look (needs a Powerline-patched font); this package shows the host name only over ssh
+  3:30 PM ▶ alice ▶ ⎇ main ▶ ~ › project › src ▶
+
+# After a failed command
+  3:30 PM ▶ alice ▶ ⎇ main ▶ ~ › project › src ▶ 1 ▶
+
+# Over ssh from a client listed with --plain-from: glyph-free theme, and the host name shows
+ ⌚  3:30 PM ▌ ⌂ webserver ▌ alice ▌ ⎇ main ▌ ~ │ project │ src ▌

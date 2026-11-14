@@ -1,0 +1,8 @@
+# Powerline look (needs a Powerline-patched font)
+ 03:30 PM ▶ alice ▶ laptop ▶ ~ ▶ project › src ▶ main ▶ 2⬆ ▶ ✎ ▶ ? ▶ $ ▶
+
+# After a failed command (exit code segment)
+ 03:30 PM ▶ alice ▶ laptop ▶ ~ ▶ project › src ▶ main ▶ 2⬆ ▶ ✎ ▶ ? ▶ $ ▶ 1 ▶
+
+# Plain mode, for an ssh client listed with --plain-from
+ 03:30 PM ▶ alice ▶ webserver ▶ ~ ▶ project ❯ src ▶ main ▶ 2⬆ ▶ ✎ ▶ ? ▶ $ ▶
