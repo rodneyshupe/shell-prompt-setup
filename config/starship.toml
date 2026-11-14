@@ -1,0 +1,363 @@
+# Starship prompt: two-line frame, │ separators, plain-text symbols.
+# Only uses characters that render in any font (no Powerline / Nerd Font glyphs needed),
+# so it also works in browser terminals and over plain SSH.
+#
+# To switch to rounded corners, change "┌─" to "╭─" and "└─" to "╰─" in `format`.
+# Preview a change without opening a new shell:  starship prompt
+
+format = """
+[┌─ ](bold blue)$time[ │ ](bold blue)$username$hostname${custom.vip}[ │ ](bold blue)$directory\
+([ │ ](bold blue)$git_branch$git_status)$cmd_duration$status $all\
+[└─](bold blue)$character"""
+
+[character]
+success_symbol = "[>](bold green)"
+error_symbol = "[>](bold red)"
+vimcmd_symbol = "[<](bold green)"
+
+[time]
+disabled = false
+time_format = "%-I:%M %p"
+style = "white"
+format = "[$time]($style)"
+
+[username]
+show_always = true
+style_user = "bold cyan"
+style_root = "bold red"
+format = "[$user]($style)"
+
+[hostname]
+ssh_only = false
+ssh_symbol = ""
+style = "bold green"
+format = "[@](white)[$hostname]($style)"
+
+[directory]
+style = "bold white"
+format = "[$path]($style)"
+truncation_length = 6
+truncation_symbol = "…/"
+read_only = " ro"
+
+[git_branch]
+symbol = "git "
+format = "[$symbol$branch]($style)"
+
+[git_status]
+format = "([ $all_status$ahead_behind]($style))"
+ahead = ">"
+behind = "<"
+diverged = "<>"
+renamed = "r"
+deleted = "x"
+
+# Shown only for commands that run longer than 2 seconds
+[cmd_duration]
+style = "yellow"
+format = "[ │ ](bold blue)[took $duration]($style)"
+
+# Shown only when the last command failed
+[status]
+disabled = false
+style = "bold red"
+format = "[ │ ](bold blue)[exit $status( $common_meaning)( $signal_name)]($style)"
+
+[container]
+disabled = true
+
+# Optional marker for a host that holds a floating/virtual IP (keepalived, HA pairs, ...).
+# Set PROMPT_VIP=<address> in ~/.zshrc.local (install.sh --vip <address> does that); the
+# marker shows only while this host has that address. Unset: nothing is shown.
+[custom.vip]
+when = '[ -n "$PROMPT_VIP" ] && ip -4 -o addr show 2>/dev/null | grep -q " $PROMPT_VIP/"'
+command = "echo VIP"
+style = "bold yellow"
+format = "[ \\[$output\\]]($style)"
+
+# ---- Plain-text symbols for everything else (from `starship preset plain-text-symbols`) ----
+[git_commit]
+tag_symbol = " tag "
+
+[aws]
+symbol = "aws "
+
+[azure]
+symbol = "az "
+
+[buf]
+symbol = "buf "
+
+[bun]
+symbol = "bun "
+
+[c]
+detect_extensions = []
+symbol = "C "
+
+[cobol]
+detect_extensions = []
+symbol = "cobol "
+
+[conda]
+symbol = "conda "
+
+[crystal]
+detect_extensions = []
+symbol = "cr "
+
+[cmake]
+symbol = "cmake "
+
+[daml]
+symbol = "daml "
+
+[dart]
+detect_extensions = []
+symbol = "dart "
+
+[deno]
+symbol = "deno "
+
+[dotnet]
+detect_extensions = []
+symbol = ".NET "
+
+[docker_context]
+symbol = "docker "
+
+[elixir]
+symbol = "exs "
+
+[elm]
+detect_extensions = []
+symbol = "elm "
+
+[fennel]
+detect_extensions = []
+symbol = "fnl "
+
+[fossil_branch]
+symbol = "fossil "
+
+[gcloud]
+symbol = "gcp "
+
+[gleam]
+detect_extensions = []
+symbol = "gleam "
+
+[golang]
+detect_extensions = []
+symbol = "go "
+
+[gradle]
+detect_extensions = []
+symbol = "gradle "
+
+[guix_shell]
+symbol = "guix "
+
+[hg_branch]
+symbol = "hg "
+
+[java]
+detect_extensions = []
+symbol = "java "
+
+[julia]
+detect_extensions = []
+symbol = "jl "
+
+[kotlin]
+detect_extensions = []
+symbol = "kt "
+
+[lua]
+detect_extensions = []
+symbol = "lua "
+
+[nodejs]
+detect_extensions = []
+symbol = "nodejs "
+
+[memory_usage]
+symbol = "memory "
+
+[meson]
+symbol = "meson "
+
+[nats]
+symbol = "nats "
+
+[nim]
+detect_extensions = []
+symbol = "nim "
+
+[nix_shell]
+symbol = "nix "
+
+[ocaml]
+detect_extensions = []
+symbol = "ml "
+
+[opa]
+detect_extensions = []
+symbol = "opa "
+
+[os.symbols]
+AIX = "aix "
+Alpaquita = "alq "
+AlmaLinux = "alma "
+Alpine = "alp "
+Amazon = "amz "
+Android = "andr "
+Arch = "rch "
+Artix = "atx "
+CachyOS = "cach "
+CentOS = "cent "
+Debian = "deb "
+DragonFly = "dfbsd "
+Emscripten = "emsc "
+EndeavourOS = "ndev "
+Fedora = "fed "
+FreeBSD = "fbsd "
+Garuda = "garu "
+Gentoo = "gent "
+HardenedBSD = "hbsd "
+Illumos = "lum "
+Kali = "kali "
+Linux = "lnx "
+Mabox = "mbox "
+Macos = "mac "
+Manjaro = "mjo "
+Mariner = "mrn "
+MidnightBSD = "mid "
+Mint = "mint "
+NetBSD = "nbsd "
+NixOS = "nix "
+Nobara = "nbra "
+OpenBSD = "obsd "
+OpenCloudOS = "ocos "
+openEuler = "oeul "
+openSUSE = "osuse "
+OracleLinux = "orac "
+Pop = "pop "
+Raspbian = "rasp "
+Redhat = "rhl "
+RedHatEnterprise = "rhel "
+RockyLinux = "rky "
+Redox = "redox "
+Solus = "sol "
+SUSE = "suse "
+Ubuntu = "ubnt "
+Ultramarine = "ultm "
+Unknown = "unk "
+Uos = "uos "
+Void = "void "
+Windows = "win "
+
+[package]
+symbol = "pkg "
+
+[perl]
+detect_extensions = []
+symbol = "pl "
+
+[php]
+detect_extensions = []
+symbol = "php "
+
+[pijul_channel]
+symbol = "pijul "
+
+[pulumi]
+symbol = "pulumi "
+
+[purescript]
+detect_extensions = []
+symbol = "purs "
+
+[python]
+symbol = "py "
+# Don't show for a stray *.py file; only for project markers (pyproject.toml,
+# requirements.txt, .python-version, ...) or an active virtualenv.
+detect_extensions = []
+
+[quarto]
+detect_extensions = []
+symbol = "quarto "
+
+[raku]
+detect_extensions = []
+symbol = "raku "
+
+[ruby]
+detect_extensions = []
+symbol = "rb "
+
+[rust]
+detect_extensions = []
+symbol = "rs "
+
+[scala]
+detect_extensions = []
+symbol = "scala "
+
+[spack]
+symbol = "spack "
+
+[solidity]
+detect_extensions = []
+symbol = "solidity "
+
+[sudo]
+symbol = "sudo "
+
+[swift]
+detect_extensions = []
+symbol = "swift "
+
+[typst]
+detect_extensions = []
+symbol = "typst "
+
+[terraform]
+detect_extensions = []
+symbol = "terraform "
+
+[zig]
+detect_extensions = []
+symbol = "zig "
+
+# ---- No language marker for a stray source file ----
+# Every language module below is triggered by project markers only (Cargo.toml, package.json,
+# go.mod, ...), never by a lone *.rs / *.js / *.go in a folder such as ~/Downloads.
+# The ones marked (ext-only) have no marker besides the extension, so they never show.
+
+[cpp]
+detect_extensions = []  # (ext-only)
+
+[fortran]
+detect_extensions = []
+
+[haskell]
+detect_extensions = []
+
+[haxe]
+detect_extensions = []
+
+[mojo]
+detect_extensions = []  # (ext-only)
+
+[odin]
+detect_extensions = []  # (ext-only)
+
+[red]
+detect_extensions = []  # (ext-only)
+
+[rlang]
+detect_extensions = []
+
+[vlang]
+detect_extensions = []

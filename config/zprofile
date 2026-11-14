@@ -1,0 +1,3 @@
+# ~/.zprofile: login shells (Linux). Pull in Debian's /etc/profile (root PATH incl. sbin,
+# /etc/profile.d/*) the way bash does; zsh doesn't read it on its own.
+emulate sh -c '. /etc/profile'
