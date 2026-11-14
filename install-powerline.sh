@@ -169,28 +169,6 @@ installer_smoke() {
   fi
 }
 
-# A rc file that already loads Powerline by hand would draw two prompts. Say so and skip it, or with
-# --force remove the standard Debian "# Powerline configuration" block (the file is backed up first).
-installer_before_rc() {
-  local rc=$1 mine tmp
-  [ -f "$rc" ] || return 0
-  mine='bindings/(bash|zsh)/powerline|powerline-daemon|_update_ps1|powerline-shell'
-  others() { awk '/^# >>> shell-prompt-setup: /{skip=1} !skip{print} /^# <<< shell-prompt-setup: /{skip=0}' "$rc" | grep -n -E "$mine" | head -3; }
-  [ -n "$(others)" ] || return 0
-  if [ "$FORCE" = 1 ] && grep -qx '# Powerline configuration' "$rc"; then
-    tmp=$(mktemp "${TMPDIR:-/tmp}/sps-file.XXXXXX")
-    awk '/^# Powerline configuration$/{skip=1} !skip{print} skip && /^fi$/{skip=0}' "$rc" > "$tmp"
-    run cp -p "$rc" "$rc.bak.$(ts)"
-    overwrite_file "$tmp" "$rc"
-    rm -f "$tmp"
-    say "  $rc: old \"Powerline configuration\" block removed (backup kept)"
-    [ -n "$(others)" ] || return 0
-  fi
-  warn "$rc already loads Powerline itself ($(others | head -1 | cut -c1-70)); not adding a second prompt. Remove those lines, or re-run with --force to remove the standard \"# Powerline configuration\" block."
-  RC=1
-  return 1
-}
-
 installer_done() {
   say "Powerline needs a Powerline-patched font in the terminal you look at; with --plain-from, listed ssh clients get a glyph-free theme."
 }

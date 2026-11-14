@@ -73,9 +73,12 @@ drift on shell detection, blocks, migration or uninstall. Choices:
   full look. The earlier approach (a client-side `LC_NERDFONT=1` marker sent by every glyph-capable machine) was dropped: it needs setup on
   every client. `PROMPT_PLAIN=1` forces the plain theme. On macOS `--fonts` installs a patched font (Homebrew cask
   `font-meslo-for-powerline`); choosing it in the terminal profile stays manual.
-- **An rc that already loads Powerline by hand** (the guests' `~/.bashrc` has the standard `# Powerline configuration` block) would draw two
-  prompts. The installer refuses to add a second one and says why; with `--force` it removes that standard block (after a backup) and
-  adds its own. Anything else that mentions Powerline is left for the user.
+- **An rc that already loads another prompt by hand** (the guests' `~/.bashrc` has the standard `# Powerline configuration` block, the Proxmox nodes'
+  has the powerline-shell `_update_ps1` snippet) would draw two prompts: both assign `PS1` on every prompt and the winner depends on the order of
+  `PROMPT_COMMAND`. This is a property of any prompt installer, not just the Powerline one, so the guard lives in `lib/common.sh`
+  (`prompt_conflict_guard`) and both installers use it. It refuses to add a block and says which lines it found; with `--force` it removes the two
+  standard snippets it recognises (after a backup) and nothing else. A hand-written `starship init`, oh-my-posh and the like are never removed: the
+  installer cannot know what else those lines do.
 - **Not ported on purpose:** the Starship prompt's own features (ssh depth label, orange frame over ssh, ahead/behind counts, VIP marker,
   rounded/square corners). Powerline has its own segments and themes; a lookalike would be a different project.
 

@@ -137,6 +137,59 @@ useradd -m -s /bin/bash carol
 curl -fsSL "$HTTP_BASE/install.sh" | bash -s -- --users carol --base-url "$HTTP_BASE" || fail "curl-style install failed"
 [ -s /home/carol/.config/shell-prompt-setup/prompt.sh ] && grep -q 'shell-prompt-setup: prompt >>>' /home/carol/.bashrc || fail "curl-style result"
 
+step "12. an rc that already loads another prompt by hand: refused, or (--force) the standard snippets are removed"
+useradd -m -s /bin/bash nod; useradd -m -s /bin/bash dby; useradd -m -s /bin/bash hnd
+# nod: the powerline-shell snippet exactly as found on the Proxmox nodes
+cat >> /home/nod/.bashrc <<'EOS'
+# Some more alias to avoid making mistakes:
+# alias rm='rm -i'
+#!/usr/bin/env bash
+function _update_ps1() {
+    PS1=$(powerline-shell $?)
+}
+
+if [[ $TERM != linux && ! $PROMPT_COMMAND =~ _update_ps1 ]]; then
+    PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"
+fi
+EOS
+# dby: the standard Debian Powerline block
+cat >> /home/dby/.bashrc <<'EOS'
+
+# Powerline configuration
+if [ -f /usr/share/powerline/bindings/bash/powerline.sh ]; then
+  powerline-daemon -q
+  POWERLINE_BASH_CONTINUATION=1
+  POWERLINE_BASH_SELECT=1
+  source /usr/share/powerline/bindings/bash/powerline.sh
+fi
+alias keepme=1
+EOS
+# hnd: a hand-written starship init, which is never removed
+printf '\neval "$(starship init bash)"\nalias keepme=1\n' >> /home/hnd/.bashrc
+chown nod:nod /home/nod/.bashrc; chown dby:dby /home/dby/.bashrc; chown hnd:hnd /home/hnd/.bashrc
+for u in nod dby hnd; do cp /home/$u/.bashrc /tmp/$u.bashrc; done
+
+$INSTALL --users nod >/tmp/nod.out 2>&1 && fail "expected a non-zero exit when .bashrc already loads another prompt"
+grep -q "already loads another prompt" /tmp/nod.out || fail "no explanation: $(tail -3 /tmp/nod.out)"
+cmp -s /tmp/nod.bashrc /home/nod/.bashrc || fail "nod's .bashrc changed although the installer refused"
+$INSTALL --users nod --force >/dev/null 2>&1 || fail "--force failed for nod"
+grep -q -E '_update_ps1|powerline-shell' /home/nod/.bashrc && fail "the powerline-shell snippet was not removed: $(grep -n -E '_update_ps1|powerline-shell' /home/nod/.bashrc)"
+grep -q "alias rm='rm -i'" /home/nod/.bashrc || fail "nod's other lines were damaged"
+[ "$(grep -c 'shell-prompt-setup: prompt >>>' /home/nod/.bashrc)" = 1 ] || fail "our block missing after --force"
+ls /home/nod/.bashrc.bak.* >/dev/null 2>&1 || fail "no backup before removing the snippet"
+o=$(su nod -c "bash -i -c 'echo S=\$STARSHIP_SHELL; echo PC=\$PROMPT_COMMAND'" 2>&1)
+echo "$o" | grep -q 'S=bash' || fail "nod: starship not active after --force: $o"
+echo "$o" | grep -q '_update_ps1' && fail "nod: the old prompt function is still in PROMPT_COMMAND"
+
+$INSTALL --users dby --force >/dev/null 2>&1 || fail "--force failed for dby"
+grep -q '^# Powerline configuration' /home/dby/.bashrc && fail "the Debian Powerline block was not removed"
+grep -q 'alias keepme=1' /home/dby/.bashrc || fail "dby's own line after the block was removed"
+[ "$(grep -c 'shell-prompt-setup: prompt >>>' /home/dby/.bashrc)" = 1 ] || fail "dby: our block missing"
+
+$INSTALL --users hnd --force >/tmp/hnd.out 2>&1 && fail "expected a refusal for a hand-written starship init, even with --force"
+cmp -s /tmp/hnd.bashrc /home/hnd/.bashrc || fail "a hand-written starship init was touched"
+grep -q "already loads another prompt" /tmp/hnd.out || fail "no explanation for the hand-written init"
+
 # ----------------------------------------------------------------------------------------------
 # Prompt behaviour, the same checks in bash (bob) and zsh (zed).
 H=$(hostname)

@@ -95,7 +95,7 @@ fi
 EOS
 chown pat /home/pat/.bashrc; cp /home/pat/.bashrc /tmp/pat.bashrc
 $PL --users pat >/tmp/pat.out 2>&1 && fail "expected a non-zero exit when .bashrc already loads Powerline"
-grep -q "already loads Powerline" /tmp/pat.out || fail "no explanation: $(tail -3 /tmp/pat.out)"
+grep -q "already loads another prompt" /tmp/pat.out || fail "no explanation: $(tail -3 /tmp/pat.out)"
 cmp -s /tmp/pat.bashrc /home/pat/.bashrc || fail ".bashrc changed although the installer refused"
 $PL --users pat --force >/dev/null 2>&1 || fail "--force failed"
 grep -q '^# Powerline configuration' /home/pat/.bashrc && fail "the old Powerline block was not removed"

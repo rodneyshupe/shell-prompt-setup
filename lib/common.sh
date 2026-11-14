@@ -15,8 +15,8 @@
 #   installer_user u home dir   place the prompt's files for one user (dir exists)
 #   installer_body              block body for the shell rc files (stdout)
 #   installer_smoke             command run inside an interactive shell to prove the prompt loaded
-#   installer_before_rc rc u    before a prompt block is written to rc: return non-zero to skip that file
-#                               (the user's own setup would clash; print why and set RC=1)
+#   installer_before_rc rc u    before a prompt block is written to rc: return non-zero to skip that file.
+#                               Default: prompt_conflict_guard (another prompt already loaded by hand).
 #   installer_cleanup           remove temp files (end of the run)
 #   installer_done              extra final message
 #
@@ -47,7 +47,7 @@ installer_global()     { :; }
 installer_user()       { :; }
 installer_body()       { :; }
 installer_smoke()      { echo 'true'; }
-installer_before_rc()  { :; }
+installer_before_rc()  { prompt_conflict_guard "$1"; }
 installer_cleanup()    { :; }
 installer_done()       { :; }
 
@@ -326,6 +326,58 @@ bash_rc_for() {
     [ -e "$home/$f" ] && { printf '%s\n' "$home/$f"; return; }
   done
   printf '%s\n' "$home/.bash_profile"
+}
+
+# ---- another prompt already loaded by hand ---------------------------------------------------------
+# A prompt that the user's own rc file already loads (Powerline, powerline-shell, a hand-written starship init)
+# would fight with ours for PS1 on every prompt. prompt_conflict_guard <rc file> says so and returns non-zero
+# (the caller then skips that file), or, with --force, first removes the standard snippets it recognises,
+# after a backup: the Debian "# Powerline configuration" block and the powerline-shell _update_ps1 snippet.
+# Anything else (a hand-written `starship init`, oh-my-posh, ...) is never removed: the user has to.
+FOREIGN_PROMPT='bindings/(bash|zsh)/powerline|powerline-daemon|_update_ps1|powerline-shell|starship init|oh-my-posh init'
+
+foreign_prompt_lines() {   # lines of the rc file that load another prompt, outside our own blocks
+  awk '/^# >>> shell-prompt-setup: /{skip=1} !skip{print} /^# <<< shell-prompt-setup: /{skip=0}' "$1" | grep -n -E "$FOREIGN_PROMPT" | head -3
+}
+
+prompt_conflict_guard() {
+  local rc=$1 tmp changed=0
+  [ -f "$rc" ] || return 0
+  [ -n "$(foreign_prompt_lines "$rc")" ] || return 0
+  if [ "$FORCE" = 1 ]; then
+    tmp=$(mktemp "${TMPDIR:-/tmp}/sps-file.XXXXXX")
+    if grep -qx '# Powerline configuration' "$rc"; then
+      awk '/^# Powerline configuration$/{skip=1} !skip{print} skip && /^fi$/{skip=0}' "$rc" > "$tmp"
+      cat "$tmp" > "$tmp.2" && mv "$tmp.2" "$tmp"
+      changed=1
+    else
+      cat "$rc" > "$tmp"
+    fi
+    if grep -q '_update_ps1' "$tmp"; then
+      awk '
+        function flush() { if (have) print held; have = 0 }
+        skipf { if ($0 ~ /^}/) skipf = 0; next }
+        skipi { if ($0 ~ /^fi[ \t]*$/) skipi = 0; next }
+        $0 ~ /^(function )?_update_ps1[ \t]*\(\)/ {
+          if (have && held ~ /^#!\/usr\/bin\/env bash/) have = 0
+          flush(); if ($0 !~ /}[ \t]*$/) skipf = 1; next }
+        $0 ~ /^if .*_update_ps1/ { flush(); if ($0 !~ /fi[ \t]*$/) skipi = 1; next }
+        { flush(); held = $0; have = 1 }
+        END { flush() }' "$tmp" > "$tmp.2" && mv "$tmp.2" "$tmp"
+      changed=1
+    fi
+    if [ "$changed" = 1 ]; then
+      run cp -p "$rc" "$rc.bak.$(ts)"
+      overwrite_file "$tmp" "$rc"
+      say "  $rc: the standard Powerline / powerline-shell prompt snippets removed (backup kept)"
+    fi
+    rm -f "$tmp" "$tmp.2"
+    [ "$DRY" = 1 ] && [ "$changed" = 1 ] && return 0
+    [ -n "$(foreign_prompt_lines "$rc")" ] || return 0
+  fi
+  warn "$rc already loads another prompt by hand ($(foreign_prompt_lines "$rc" | head -1 | cut -c1-70)); not adding a second one. Remove those lines yourself, or re-run with --force to remove the standard Powerline / powerline-shell snippets (a backup is kept)."
+  RC=1
+  return 1
 }
 
 # ---- block bodies --------------------------------------------------------------------------

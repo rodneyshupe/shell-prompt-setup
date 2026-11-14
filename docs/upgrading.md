@@ -19,5 +19,5 @@ What happens, per user:
 Files in `~/.config/shell-prompt-setup/` that differ from the repo's are left alone unless you pass `--force`, so a host that was
 installed by an older version needs `--force` once to pick up the new `starship.toml`.
 
-A `~/.bashrc` that loads Powerline by hand (the standard Debian `# Powerline configuration` block) is refused by `install-powerline.sh`
-rather than getting a second prompt; `--force` removes that standard block (after a backup). See [design.md](design.md#powerline-as-a-separate-installer).
+A `~/.bashrc` that loads another prompt by hand (the standard Debian `# Powerline configuration` block, or the powerline-shell `_update_ps1` snippet) is refused by both
+installers rather than getting a second prompt; `--force` removes those two standard snippets (after a backup). See [design.md](design.md#powerline-as-a-separate-installer).

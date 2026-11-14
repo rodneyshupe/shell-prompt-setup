@@ -161,7 +161,7 @@ nvm/pyenv lines and so on stay where they are.
 - If your config sets its own prompt (Oh My Zsh `ZSH_THEME`, Powerlevel10k, `PS1=` / `PROMPT=`, another `starship init`), remove that: two prompts fight. The new block is
   appended at the end, so it normally wins.
 - Your own `~/.config/starship.toml` and `~/.config/powerline*` are not touched: this project keeps its config in `~/.config/shell-prompt-setup/`.
-- A `~/.bashrc` that already loads Powerline by hand is refused by the Powerline installer (it would draw two prompts); `--force` removes the standard Debian block.
+- A `~/.bashrc` or `~/.zshrc` that already loads **another prompt by hand** (Powerline, powerline-shell, a `starship init`) is refused by both installers, because two prompts fight over `PS1`; the message says which lines. `--force` removes the two standard snippets it recognises, the Debian `# Powerline configuration` block and the powerline-shell `_update_ps1` snippet (after a backup). A hand-written `starship init` or anything else you have to remove yourself.
 - macOS terminals start login shells, so the bash block goes into `~/.bash_profile` (or the first of `~/.bash_login`, `~/.profile` that exists). Linux: `~/.bashrc`.
 - Coming from an older version of this project? See [docs/upgrading.md](docs/upgrading.md).
 
