@@ -2,13 +2,30 @@
 # Only uses characters that render in any font (no Powerline / Nerd Font glyphs needed),
 # so it also works in browser terminals and over plain SSH.
 #
-# To switch to rounded corners, change "┌─" to "╭─" and "└─" to "╰─" in `format`.
+# Corners are rounded (╭─ ╰─) unless PROMPT_CORNER_TOP / PROMPT_CORNER_BOTTOM are set (zshrc sets
+# the square ┌─ └─ for terminals whose font draws the rounded ones unevenly, see PROMPT_SQUARE_FROM).
 # Preview a change without opening a new shell:  starship prompt
 
 format = """
-[┌─ ](bold blue)$time[ │ ](bold blue)$username$hostname${custom.vip}[ │ ](bold blue)$directory\
-([ │ ](bold blue)$git_branch$git_status)$cmd_duration$status $all\
-[└─](bold blue)$character"""
+${env_var.PROMPT_CORNER_TOP}[ ](bold blue)${env_var.PROMPT_SSH_LABEL}$time[ │ ](bold blue)$username$hostname${custom.vip}[ │ ](bold blue)$directory\
+([ │ ](bold blue)$git_branch$git_status${custom.gitsync})$cmd_duration$status $all\
+${env_var.PROMPT_CORNER_BOTTOM}$character"""
+
+# Corner characters: the env var wins, the default is rounded.
+[env_var.PROMPT_CORNER_TOP]
+default = "╭─"
+format = "[$env_value](bold blue)"
+
+[env_var.PROMPT_CORNER_BOTTOM]
+default = "╰─"
+format = "[$env_value](bold blue)"
+
+# Shown only in an ssh session: tells a remote host from the local machine. zshrc sets PROMPT_SSH_LABEL
+# to `ssh` (one hop), `ssh2` (ssh from an ssh session), `ssh3`, ... (208 = orange. In an ssh session
+# zshrc also switches to starship-ssh.toml, generated from this file by install.sh with the blue frame
+# replaced by orange.)
+[env_var.PROMPT_SSH_LABEL]
+format = "[ $env_value ](bold fg:16 bg:208) "   # fg:16 = true black; plain `black` is drawn dark grey by many terminals when bold
 
 [character]
 success_symbol = "[>](bold green)"
@@ -24,13 +41,13 @@ format = "[$time]($style)"
 [username]
 show_always = true
 style_user = "bold cyan"
-style_root = "bold red"
+style_root = "bold 39"   # azure: the complement of the orange frame (red was too close to it)
 format = "[$user]($style)"
 
 [hostname]
 ssh_only = false
 ssh_symbol = ""
-style = "bold green"
+style = "bold blue"   # same as the frame; starship-ssh.toml turns it (and the frame) orange in an ssh session
 format = "[@](white)[$hostname]($style)"
 
 [directory]
@@ -45,10 +62,7 @@ symbol = "git "
 format = "[$symbol$branch]($style)"
 
 [git_status]
-format = "([ $all_status$ahead_behind]($style))"
-ahead = ">"
-behind = "<"
-diverged = "<>"
+format = "([ $all_status]($style))"   # ahead/behind: see custom.gitsync below
 renamed = "r"
 deleted = "x"
 
@@ -65,6 +79,15 @@ format = "[ │ ](bold blue)[exit $status( $common_meaning)( $signal_name)]($sty
 
 [container]
 disabled = true
+
+# Ahead/behind the upstream branch: `>` one commit ahead, `>3` three ahead, `<` one behind, `<2` two
+# behind, `> <2` both. Counts only above 1. Only inside a repo that has an upstream; costs one
+# `git rev-list` per prompt there (and a failed one elsewhere). Only as fresh as the last `git fetch`.
+[custom.gitsync]
+when = true   # custom modules are off unless `when` is set; the command prints nothing outside a repo
+command = '''git rev-list --left-right --count '@{upstream}...HEAD' 2>/dev/null | awk '{b=$1; a=$2; o=""; if (a>0) {o=">"; if (a>1) o=o a} if (b>0) {if (o!="") o=o " "; o=o "<"; if (b>1) o=o b} printf "%s", o}''''
+style = "bold red"
+format = "([ $output]($style))"
 
 # Optional marker for a host that holds a floating/virtual IP (keepalived, HA pairs, ...).
 # Set PROMPT_VIP=<address> in ~/.zshrc.local (install.sh --vip <address> does that); the

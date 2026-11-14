@@ -59,6 +59,29 @@ export PATH="$HOME/.local/bin:$PATH"
 # Per-machine / per-user additions (ssh-agent, PROMPT_VIP, aliases, ...)
 [[ -r ~/.zshrc.local ]] && source ~/.zshrc.local
 
+# Corners are rounded by default. Some fonts (a browser SSH terminal, say) draw rounded corners
+# unevenly, so square ones are used when PROMPT_CORNERS=square, or for an ssh session whose
+# client address is in PROMPT_SQUARE_FROM (space-separated; set both in ~/.zshrc.local).
+if [[ ${PROMPT_CORNERS:-} == square ]] ||
+   [[ -n ${SSH_CONNECTION:-} && -n ${PROMPT_SQUARE_FROM:-} && " $PROMPT_SQUARE_FROM " == *" ${SSH_CONNECTION%% *} "* ]]; then
+  export PROMPT_CORNER_TOP='┌─' PROMPT_CORNER_BOTTOM='└─'
+fi
+
+# ssh hops: the ssh function below sends a hop counter (LC_PROMPT_HOPS; sshd accepts LC_*), so a
+# session started from another ssh session knows its depth. Label: ssh, ssh2, ssh3, ... A session that
+# arrives without a counter (a browser terminal, scp, a script) counts as one hop.
+if [[ -n ${SSH_CONNECTION:-} ]]; then
+  [[ ${LC_PROMPT_HOPS:-} == <-> ]] && export PROMPT_HOPS=$LC_PROMPT_HOPS || export PROMPT_HOPS=1
+  (( PROMPT_HOPS > 1 )) && export PROMPT_SSH_LABEL="ssh$PROMPT_HOPS" || export PROMPT_SSH_LABEL=ssh
+fi
+ssh() { LC_PROMPT_HOPS=$(( ${PROMPT_HOPS:-0} + 1 )) command ssh -o SendEnv=LC_PROMPT_HOPS "$@"; }
+
+# In an ssh session use the orange-frame variant of the prompt config (install.sh generates
+# ~/.config/starship-ssh.toml from starship.toml), so a remote host is obvious at a glance.
+if [[ -n ${SSH_CONNECTION:-} && -r ~/.config/starship-ssh.toml ]]; then
+  export STARSHIP_CONFIG=~/.config/starship-ssh.toml
+fi
+
 # Prompt (config: ~/.config/starship.toml)
 (( $+commands[starship] )) && eval "$(starship init zsh)"
 

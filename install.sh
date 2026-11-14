@@ -21,6 +21,7 @@ USERS_ARG=""
 SET_SHELL=0
 SSH_AGENT=0
 VIP=""
+SQUARE_FROM=""
 DO_PACKAGES=1
 FORCE=0
 DRY=0
@@ -38,6 +39,10 @@ Usage: install.sh [options]
                    an agent is already available, e.g. forwarded; stops only its own agent).
   --vip ADDRESS    Show a [VIP] marker in the prompt while this host holds ADDRESS
                    (keepalived etc.); written as PROMPT_VIP to ~/.zshrc.local.
+  --square-from IP[,IP...]
+                   Use square corners (┌─ └─) instead of rounded for ssh sessions whose client
+                   address is in the list (a browser SSH terminal whose font draws the rounded
+                   ones unevenly, for instance); written as PROMPT_SQUARE_FROM to ~/.zshrc.local.
   --no-packages    Do not install packages (zsh starship zsh-autosuggestions
                    zsh-syntax-highlighting); only place the config files.
   --force          Overwrite differing files (backup kept as <file>.bak.<timestamp>).
@@ -46,8 +51,8 @@ Usage: install.sh [options]
                    (default: the main branch on GitHub).
   -h, --help       This text.
 
-Files placed per user: ~/.zshrc, ~/.config/starship.toml, ~/.zprofile (Linux only), and
-~/.zshrc.local when --ssh-agent or --vip is given (managed block only; rest of the file kept).
+Files placed per user: ~/.zshrc, ~/.config/starship.toml, ~/.config/starship-ssh.toml, ~/.zprofile (Linux only), and
+~/.zshrc.local when --ssh-agent, --vip or --square-from is given (managed block only; rest of the file kept).
 USAGE
 }
 
@@ -59,6 +64,8 @@ while [ $# -gt 0 ]; do
     --ssh-agent)   SSH_AGENT=1; shift ;;
     --vip)         VIP=${2:?--vip needs an address}; shift 2 ;;
     --vip=*)       VIP=${1#*=}; shift ;;
+    --square-from) SQUARE_FROM=${2:?--square-from needs addresses}; shift 2 ;;
+    --square-from=*) SQUARE_FROM=${1#*=}; shift ;;
     --no-packages) DO_PACKAGES=0; shift ;;
     --force)       FORCE=1; shift ;;
     --dry-run)     DRY=1; shift ;;
@@ -85,6 +92,12 @@ IS_ROOT=0; [ "$(id -u)" = 0 ] && IS_ROOT=1
 
 if [ -n "$VIP" ]; then
   case "$VIP" in *[!0-9.]*|"") die "--vip must be an IPv4 address, got '$VIP'" ;; esac
+fi
+
+SQUARE_LIST=""
+if [ -n "$SQUARE_FROM" ]; then
+  case "$SQUARE_FROM" in *[!0-9.:,a-fA-F]*|"") die "--square-from must be a comma-separated list of IP addresses, got '$SQUARE_FROM'" ;; esac
+  SQUARE_LIST=$(printf '%s' "$SQUARE_FROM" | tr ',' ' ')
 fi
 
 # ---- where the config files come from ---------------------------------------------------
@@ -183,6 +196,10 @@ write_local() {
       echo "# Show [VIP] in the prompt while this host holds this address."
       echo "export PROMPT_VIP=$VIP"
     fi
+    if [ -n "$SQUARE_LIST" ]; then
+      echo "# Square corners for ssh sessions coming from these client addresses (font workaround)."
+      echo "PROMPT_SQUARE_FROM=\"$SQUARE_LIST\""
+    fi
     if [ "$SSH_AGENT" = 1 ]; then
       cat <<'AGENT'
 # ssh-agent with the GitHub keys, unless one is already available (e.g. forwarded).
@@ -224,6 +241,11 @@ smoke_test() {
 # ---- main --------------------------------------------------------------------------------
 [ "$DO_PACKAGES" = 1 ] && install_packages
 
+# Orange variant of starship.toml for ssh sessions (the blue frame and host name -> orange), generated into a temp
+# file so the source tree is never written to.
+SSH_VARIANT=$(mktemp "${TMPDIR:-/tmp}/starship-ssh.XXXXXX") || die "cannot create a temp file"
+sed 's/bold blue/bold 208/g' "$SRC/starship.toml" > "$SSH_VARIANT"
+
 TARGETS=${USERS_ARG:-$ME}
 OLDIFS=$IFS; IFS=,; set -- $TARGETS; IFS=$OLDIFS
 for u in "$@"; do
@@ -236,8 +258,9 @@ for u in "$@"; do
 
   place "$SRC/zshrc"         "$home/.zshrc"                 "$u"
   place "$SRC/starship.toml" "$home/.config/starship.toml"  "$u"
+  place "$SSH_VARIANT"       "$home/.config/starship-ssh.toml" "$u"
   [ "$OS" = linux ] && place "$SRC/zprofile" "$home/.zprofile" "$u"
-  if [ "$SSH_AGENT" = 1 ] || [ -n "$VIP" ]; then write_local "$u" "$home"; fi
+  if [ "$SSH_AGENT" = 1 ] || [ -n "$VIP" ] || [ -n "$SQUARE_LIST" ]; then write_local "$u" "$home"; fi
 
   if [ "$DRY" = 1 ]; then
     [ "$SET_SHELL" = 1 ] && say "  [dry-run] would test a zsh login for $u, then chsh -s zsh $u"
@@ -258,6 +281,7 @@ for u in "$@"; do
   fi
 done
 
+rm -f "$SSH_VARIANT"
 [ "$DRY" = 1 ] && say "(dry run: nothing was changed)"
 [ "$RC" = 0 ] && say "Done. Open a new terminal (or run: exec zsh)."
 exit $RC

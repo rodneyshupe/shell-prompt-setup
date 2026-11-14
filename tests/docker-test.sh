@@ -14,7 +14,7 @@ sleep 1
 docker run --rm --cap-add NET_ADMIN -v "$ROOT":/repo:ro --add-host=host.docker.internal:host-gateway "$IMAGE" bash -c '
 set -eu
 export DEBIAN_FRONTEND=noninteractive
-apt-get update -qq >/dev/null && apt-get install -y -qq curl ca-certificates sudo iproute2 >/dev/null
+apt-get update -qq >/dev/null && apt-get install -y -qq curl ca-certificates sudo iproute2 git >/dev/null
 useradd -m -s /bin/bash alice; useradd -m -s /bin/bash bob
 fail() { echo "FAIL: $*"; exit 1; }
 
@@ -24,7 +24,7 @@ bash /repo/install.sh --users root,alice --dry-run --shell >/tmp/dry.out
 grep -q "dry-run" /tmp/dry.out || fail "no dry-run output"
 
 echo "--- 2. real install from the clone (root, alice with --shell --vip; bob with --ssh-agent)"
-bash /repo/install.sh --users root,alice --shell --vip 10.0.0.10
+bash /repo/install.sh --users root,alice --shell --vip 10.0.0.10 --square-from 10.9.9.9
 bash /repo/install.sh --users bob --ssh-agent
 for u in root alice bob; do
   h=$(getent passwd $u | cut -d: -f6)
@@ -45,8 +45,10 @@ echo "--- 2c. starship prints no config warnings with the packaged version ($(st
 w=$(su alice -c "zsh -i -c \"starship prompt\"" 2>&1 >/dev/null | sed "s/\x1b\[[0-9;]*m//g" | grep -a WARN || true)
 [ -z "$w" ] || fail "starship warnings: $w"
 
+bash /repo/tests/container-checks.sh || exit 1
+
 echo "--- 3. idempotent re-run, and non-interactive commands still work"
-bash /repo/install.sh --users root,alice --shell --vip 10.0.0.10 | grep -c "already up to date" | grep -qv "^0$" || fail "re-run not idempotent"
+bash /repo/install.sh --users root,alice --shell --vip 10.0.0.10 --square-from 10.9.9.9 | grep -c "already up to date" | grep -qv "^0$" || fail "re-run not idempotent"
 su alice -c "true" && su alice -c "echo \$0 | grep -q zsh"
 su -l alice -c "command -v starship" >/dev/null || fail "starship not on PATH for alice"
 
