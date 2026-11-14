@@ -36,6 +36,11 @@ grep -q "ssh-agent -s" /home/bob/.zshrc.local || fail "ssh-agent block missing"
 [ "$(getent passwd alice | cut -d: -f7)" = /usr/bin/zsh ] || fail "alice shell not zsh"
 [ "$(getent passwd bob | cut -d: -f7)" = /bin/bash ] || fail "bob shell changed without --shell"
 
+echo "--- 2b. existing directories keep their mode and owner"
+[ "$(stat -c %a /root)" = 700 ] || fail "/root mode changed to $(stat -c %a /root)"
+chmod 750 /home/alice; bash /repo/install.sh --users alice --force >/dev/null; [ "$(stat -c %a /home/alice)" = 750 ] || fail "home mode changed"
+[ "$(stat -c %U /home/alice/.config)" = alice ] || fail ".config owner"
+
 echo "--- 3. idempotent re-run, and non-interactive commands still work"
 bash /repo/install.sh --users root,alice --shell --vip 10.0.0.10 | grep -c "already up to date" | grep -qv "^0$" || fail "re-run not idempotent"
 su alice -c "true" && su alice -c "echo \$0 | grep -q zsh"

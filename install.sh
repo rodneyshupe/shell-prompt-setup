@@ -160,8 +160,12 @@ place() {
       RC=1; return
     fi
   fi
-  run install -d -m 755 "$(dirname "$dst")"
-  [ "$IS_ROOT" = 1 ] && run chown "$u:$g" "$(dirname "$dst")" 2>/dev/null
+  # Create the parent directory only if it is missing (e.g. ~/.config); never change the
+  # mode or owner of one that exists (/root is 700, homes may be 750).
+  if [ ! -d "$(dirname "$dst")" ]; then
+    run install -d -m 755 "$(dirname "$dst")"
+    [ "$IS_ROOT" = 1 ] && run chown "$u:$g" "$(dirname "$dst")"
+  fi
   run install -m 644 "$src" "$dst"
   [ "$IS_ROOT" = 1 ] && run chown "$u:$g" "$dst"
   say "  $dst: installed"
