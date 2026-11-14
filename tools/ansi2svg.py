@@ -13,7 +13,7 @@ import html
 import re
 import sys
 
-CW, LH, FS = 8.4, 20, 14           # cell width, line height, font size (px)
+CW, LH, FS = 8.4, 18, 14           # cell width, line height, font size (px); a terminal row is about 1.3 x the font size
 PAD = 18
 BG_PANEL = "#1e1e1e"
 FG_DEFAULT = "#d4d4d4"
@@ -109,6 +109,30 @@ def runs(cells):
     return res
 
 
+# Box-drawing characters are drawn as lines that span the whole cell, the way a terminal draws them, so the
+# strokes of two rows meet (a font glyph stops short of the cell edge and leaves a gap).
+BOX = {chr(c) for c in (0x2500, 0x2502, 0x250c, 0x2510, 0x2514, 0x2518, 0x256d, 0x256e, 0x256f, 0x2570)}
+
+
+def box_shape(ch, x, y, color):
+    c = ord(ch)
+    cx, my, r = x + CW / 2, y + LH / 2, 4.0
+    top, bottom, left, right = y, y + LH, x, x + CW
+    if c == 0x2500:                      # horizontal
+        d = "M%.2f %.2f H%.2f" % (left, my, right)
+    elif c == 0x2502:                    # vertical
+        d = "M%.2f %.2f V%.2f" % (cx, top, bottom)
+    elif c in (0x250c, 0x256d):          # right + down (square, rounded)
+        d = ("M%.2f %.2f H%.2f V%.2f" % (right, my, cx, bottom)) if c == 0x250c else ("M%.2f %.2f H%.2f Q%.2f %.2f %.2f %.2f V%.2f" % (right, my, cx + r, cx, my, cx, my + r, bottom))
+    elif c in (0x2510, 0x256e):          # left + down
+        d = ("M%.2f %.2f H%.2f V%.2f" % (left, my, cx, bottom)) if c == 0x2510 else ("M%.2f %.2f H%.2f Q%.2f %.2f %.2f %.2f V%.2f" % (left, my, cx - r, cx, my, cx, my + r, bottom))
+    elif c in (0x2514, 0x2570):          # right + up
+        d = ("M%.2f %.2f H%.2f V%.2f" % (right, my, cx, top)) if c == 0x2514 else ("M%.2f %.2f H%.2f Q%.2f %.2f %.2f %.2f V%.2f" % (right, my, cx + r, cx, my, cx, my - r, top))
+    else:                                # left + up
+        d = ("M%.2f %.2f H%.2f V%.2f" % (left, my, cx, top)) if c == 0x2518 else ("M%.2f %.2f H%.2f Q%.2f %.2f %.2f %.2f V%.2f" % (left, my, cx - r, cx, my, cx, my - r, top))
+    return '<path d="%s" fill="none" stroke="%s" stroke-width="1.4"/>' % (d, color)
+
+
 def draw_line(cells, y):
     """-> svg fragments for one prompt line whose top is at y"""
     frag = []
@@ -122,6 +146,10 @@ def draw_line(cells, y):
         i = 0
         while i < len(text):
             ch = text[i]
+            if ch in BOX:
+                frag.append(box_shape(ch, x + i * CW, y, fg or FG_DEFAULT))
+                i += 1
+                continue
             if ch in PL_PLAIN:
                 gx = x + i * CW
                 color = fg or FG_DEFAULT
@@ -136,12 +164,12 @@ def draw_line(cells, y):
                 i += 1
                 continue
             j = i
-            while j < len(text) and text[j] not in PL_PLAIN:
+            while j < len(text) and text[j] not in PL_PLAIN and text[j] not in BOX:
                 j += 1
             seg = text[i:j]
             if seg.strip():
                 frag.append('<text x="%.2f" y="%.2f" fill="%s"%s textLength="%.2f" lengthAdjust="spacingAndGlyphs" xml:space="preserve">%s</text>'
-                            % (x + i * CW, y + LH - 6, fg or FG_DEFAULT, ' font-weight="700"' if bold else "", len(seg) * CW, html.escape(seg)))
+                            % (x + i * CW, y + LH - 5, fg or FG_DEFAULT, ' font-weight="700"' if bold else "", len(seg) * CW, html.escape(seg)))
             i = j
     return frag
 

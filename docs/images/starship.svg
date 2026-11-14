@@ -1,80 +1,94 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="808" height="428" viewBox="0 0 808 428" role="img" aria-label="Starship prompt (install.sh)">
+<svg xmlns="http://www.w3.org/2000/svg" width="808" height="408" viewBox="0 0 808 408" role="img" aria-label="Starship prompt (install.sh)">
 <rect width="100%" height="100%" rx="9" fill="#1e1e1e"/>
 <rect width="100%" height="28" rx="9" fill="#2d2d2d"/><rect y="14" width="100%" height="14" fill="#2d2d2d"/>
 <circle cx="18" cy="14" r="5.5" fill="#ff5f56"/><circle cx="37" cy="14" r="5.5" fill="#ffbd2e"/><circle cx="56" cy="14" r="5.5" fill="#27c93f"/>
 <text x="404" y="18" fill="#9d9d9d" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12">Starship prompt (install.sh)</text>
 <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', monospace" font-size="14">
 <text x="18" y="56" fill="#8b8b8b" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12">Your own machine: a git repo with changes, two commits ahead of its upstream</text>
-<text x="18.00" y="80.00" fill="#2472c8" font-weight="700" textLength="25.20" lengthAdjust="spacingAndGlyphs" xml:space="preserve">╭─ </text>
-<text x="43.20" y="80.00" fill="#e5e5e5" textLength="58.80" lengthAdjust="spacingAndGlyphs" xml:space="preserve">3:30 PM</text>
-<text x="102.00" y="80.00" fill="#2472c8" font-weight="700" textLength="25.20" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> │ </text>
-<text x="127.20" y="80.00" fill="#11a8cd" font-weight="700" textLength="42.00" lengthAdjust="spacingAndGlyphs" xml:space="preserve">alice</text>
-<text x="169.20" y="80.00" fill="#e5e5e5" textLength="8.40" lengthAdjust="spacingAndGlyphs" xml:space="preserve">@</text>
-<text x="177.60" y="80.00" fill="#2472c8" font-weight="700" textLength="75.60" lengthAdjust="spacingAndGlyphs" xml:space="preserve">laptop │ </text>
-<text x="253.20" y="80.00" fill="#e5e5e5" font-weight="700" textLength="109.20" lengthAdjust="spacingAndGlyphs" xml:space="preserve">…/project/src</text>
-<text x="362.40" y="80.00" fill="#2472c8" font-weight="700" textLength="25.20" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> │ </text>
-<text x="387.60" y="80.00" fill="#bc3fbc" font-weight="700" textLength="67.20" lengthAdjust="spacingAndGlyphs" xml:space="preserve">git main</text>
-<text x="454.80" y="80.00" fill="#cd3131" font-weight="700" textLength="50.40" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> !? &gt;2</text>
-<text x="18.00" y="100.00" fill="#2472c8" font-weight="700" textLength="16.80" lengthAdjust="spacingAndGlyphs" xml:space="preserve">╰─</text>
-<text x="34.80" y="100.00" fill="#0dbc79" font-weight="700" textLength="8.40" lengthAdjust="spacingAndGlyphs" xml:space="preserve">&gt;</text>
-<rect x="60.00" y="89.00" width="8.40" height="14" fill="#d4d4d4" opacity="0.8"/>
-<text x="18" y="132" fill="#8b8b8b" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12">Over ssh: orange frame and an ssh block</text>
-<rect x="43.20" y="142.00" width="42.00" height="20" fill="#ff8700"/>
-<text x="18.00" y="156.00" fill="#ff8700" font-weight="700" textLength="25.20" lengthAdjust="spacingAndGlyphs" xml:space="preserve">╭─ </text>
-<text x="43.20" y="156.00" fill="#000000" font-weight="700" textLength="42.00" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> ssh </text>
-<text x="93.60" y="156.00" fill="#e5e5e5" textLength="58.80" lengthAdjust="spacingAndGlyphs" xml:space="preserve">3:30 PM</text>
-<text x="152.40" y="156.00" fill="#ff8700" font-weight="700" textLength="25.20" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> │ </text>
-<text x="177.60" y="156.00" fill="#11a8cd" font-weight="700" textLength="42.00" lengthAdjust="spacingAndGlyphs" xml:space="preserve">alice</text>
-<text x="219.60" y="156.00" fill="#e5e5e5" textLength="8.40" lengthAdjust="spacingAndGlyphs" xml:space="preserve">@</text>
-<text x="228.00" y="156.00" fill="#ff8700" font-weight="700" textLength="100.80" lengthAdjust="spacingAndGlyphs" xml:space="preserve">webserver │ </text>
-<text x="328.80" y="156.00" fill="#e5e5e5" font-weight="700" textLength="8.40" lengthAdjust="spacingAndGlyphs" xml:space="preserve">~</text>
-<text x="18.00" y="176.00" fill="#ff8700" font-weight="700" textLength="16.80" lengthAdjust="spacingAndGlyphs" xml:space="preserve">╰─</text>
-<text x="34.80" y="176.00" fill="#0dbc79" font-weight="700" textLength="8.40" lengthAdjust="spacingAndGlyphs" xml:space="preserve">&gt;</text>
-<rect x="60.00" y="165.00" width="8.40" height="14" fill="#d4d4d4" opacity="0.8"/>
-<text x="18" y="208" fill="#8b8b8b" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12">root, second ssh hop, on the host that holds the VIP, after a slow command that failed</text>
-<rect x="43.20" y="218.00" width="50.40" height="20" fill="#ff8700"/>
-<text x="18.00" y="232.00" fill="#ff8700" font-weight="700" textLength="25.20" lengthAdjust="spacingAndGlyphs" xml:space="preserve">╭─ </text>
-<text x="43.20" y="232.00" fill="#000000" font-weight="700" textLength="50.40" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> ssh2 </text>
-<text x="102.00" y="232.00" fill="#e5e5e5" textLength="58.80" lengthAdjust="spacingAndGlyphs" xml:space="preserve">3:30 PM</text>
-<text x="160.80" y="232.00" fill="#ff8700" font-weight="700" textLength="25.20" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> │ </text>
-<text x="186.00" y="232.00" fill="#00afff" font-weight="700" textLength="33.60" lengthAdjust="spacingAndGlyphs" xml:space="preserve">root</text>
-<text x="219.60" y="232.00" fill="#e5e5e5" textLength="8.40" lengthAdjust="spacingAndGlyphs" xml:space="preserve">@</text>
-<text x="228.00" y="232.00" fill="#ff8700" font-weight="700" textLength="134.40" lengthAdjust="spacingAndGlyphs" xml:space="preserve">docker-network-1</text>
-<text x="362.40" y="232.00" fill="#e5e510" font-weight="700" textLength="50.40" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> [VIP]</text>
-<text x="412.80" y="232.00" fill="#ff8700" font-weight="700" textLength="25.20" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> │ </text>
-<text x="438.00" y="232.00" fill="#e5e5e5" font-weight="700" textLength="92.40" lengthAdjust="spacingAndGlyphs" xml:space="preserve">/opt/stacks</text>
-<text x="530.40" y="232.00" fill="#ff8700" font-weight="700" textLength="25.20" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> │ </text>
-<text x="555.60" y="232.00" fill="#e5e510" textLength="67.20" lengthAdjust="spacingAndGlyphs" xml:space="preserve">took 12s</text>
-<text x="622.80" y="232.00" fill="#ff8700" font-weight="700" textLength="25.20" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> │ </text>
-<text x="648.00" y="232.00" fill="#cd3131" font-weight="700" textLength="100.80" lengthAdjust="spacingAndGlyphs" xml:space="preserve">exit 1 ERROR</text>
-<text x="18.00" y="252.00" fill="#ff8700" font-weight="700" textLength="16.80" lengthAdjust="spacingAndGlyphs" xml:space="preserve">╰─</text>
-<text x="34.80" y="252.00" fill="#cd3131" font-weight="700" textLength="8.40" lengthAdjust="spacingAndGlyphs" xml:space="preserve">&gt;</text>
-<rect x="60.00" y="241.00" width="8.40" height="14" fill="#d4d4d4" opacity="0.8"/>
-<text x="18" y="284" fill="#8b8b8b" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12">A python project, command not found</text>
-<text x="18.00" y="308.00" fill="#2472c8" font-weight="700" textLength="25.20" lengthAdjust="spacingAndGlyphs" xml:space="preserve">╭─ </text>
-<text x="43.20" y="308.00" fill="#e5e5e5" textLength="58.80" lengthAdjust="spacingAndGlyphs" xml:space="preserve">3:30 PM</text>
-<text x="102.00" y="308.00" fill="#2472c8" font-weight="700" textLength="25.20" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> │ </text>
-<text x="127.20" y="308.00" fill="#11a8cd" font-weight="700" textLength="42.00" lengthAdjust="spacingAndGlyphs" xml:space="preserve">alice</text>
-<text x="169.20" y="308.00" fill="#e5e5e5" textLength="8.40" lengthAdjust="spacingAndGlyphs" xml:space="preserve">@</text>
-<text x="177.60" y="308.00" fill="#2472c8" font-weight="700" textLength="75.60" lengthAdjust="spacingAndGlyphs" xml:space="preserve">laptop │ </text>
-<text x="253.20" y="308.00" fill="#e5e5e5" font-weight="700" textLength="58.80" lengthAdjust="spacingAndGlyphs" xml:space="preserve">~/pyapp</text>
-<text x="312.00" y="308.00" fill="#2472c8" font-weight="700" textLength="25.20" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> │ </text>
-<text x="337.20" y="308.00" fill="#cd3131" font-weight="700" textLength="142.80" lengthAdjust="spacingAndGlyphs" xml:space="preserve">exit 127 NOTFOUND</text>
-<text x="480.00" y="308.00" fill="#d4d4d4" textLength="42.00" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> via </text>
-<text x="522.00" y="308.00" fill="#e5e510" font-weight="700" textLength="92.40" lengthAdjust="spacingAndGlyphs" xml:space="preserve">py v3.13.5 </text>
-<text x="18.00" y="328.00" fill="#2472c8" font-weight="700" textLength="16.80" lengthAdjust="spacingAndGlyphs" xml:space="preserve">╰─</text>
-<text x="34.80" y="328.00" fill="#cd3131" font-weight="700" textLength="8.40" lengthAdjust="spacingAndGlyphs" xml:space="preserve">&gt;</text>
-<rect x="60.00" y="317.00" width="8.40" height="14" fill="#d4d4d4" opacity="0.8"/>
-<text x="18" y="360" fill="#8b8b8b" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12">Square corners (for fonts that draw the rounded ones unevenly)</text>
-<text x="18.00" y="384.00" fill="#2472c8" font-weight="700" textLength="25.20" lengthAdjust="spacingAndGlyphs" xml:space="preserve">┌─ </text>
-<text x="43.20" y="384.00" fill="#e5e5e5" textLength="58.80" lengthAdjust="spacingAndGlyphs" xml:space="preserve">3:30 PM</text>
-<text x="102.00" y="384.00" fill="#2472c8" font-weight="700" textLength="25.20" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> │ </text>
-<text x="127.20" y="384.00" fill="#11a8cd" font-weight="700" textLength="42.00" lengthAdjust="spacingAndGlyphs" xml:space="preserve">alice</text>
-<text x="169.20" y="384.00" fill="#e5e5e5" textLength="8.40" lengthAdjust="spacingAndGlyphs" xml:space="preserve">@</text>
-<text x="177.60" y="384.00" fill="#2472c8" font-weight="700" textLength="75.60" lengthAdjust="spacingAndGlyphs" xml:space="preserve">laptop │ </text>
-<text x="253.20" y="384.00" fill="#e5e5e5" font-weight="700" textLength="8.40" lengthAdjust="spacingAndGlyphs" xml:space="preserve">~</text>
-<text x="18.00" y="404.00" fill="#2472c8" font-weight="700" textLength="16.80" lengthAdjust="spacingAndGlyphs" xml:space="preserve">└─</text>
-<text x="34.80" y="404.00" fill="#0dbc79" font-weight="700" textLength="8.40" lengthAdjust="spacingAndGlyphs" xml:space="preserve">&gt;</text>
-<rect x="60.00" y="393.00" width="8.40" height="14" fill="#d4d4d4" opacity="0.8"/>
+<path d="M26.40 75.00 H26.20 Q22.20 75.00 22.20 79.00 V84.00" fill="none" stroke="#2472c8" stroke-width="1.4"/>
+<path d="M26.40 75.00 H34.80" fill="none" stroke="#2472c8" stroke-width="1.4"/>
+<text x="43.20" y="79.00" fill="#e5e5e5" textLength="58.80" lengthAdjust="spacingAndGlyphs" xml:space="preserve">3:30 PM</text>
+<path d="M114.60 66.00 V84.00" fill="none" stroke="#2472c8" stroke-width="1.4"/>
+<text x="127.20" y="79.00" fill="#11a8cd" font-weight="700" textLength="42.00" lengthAdjust="spacingAndGlyphs" xml:space="preserve">alice</text>
+<text x="169.20" y="79.00" fill="#e5e5e5" textLength="8.40" lengthAdjust="spacingAndGlyphs" xml:space="preserve">@</text>
+<text x="177.60" y="79.00" fill="#2472c8" font-weight="700" textLength="58.80" lengthAdjust="spacingAndGlyphs" xml:space="preserve">laptop </text>
+<path d="M240.60 66.00 V84.00" fill="none" stroke="#2472c8" stroke-width="1.4"/>
+<text x="253.20" y="79.00" fill="#e5e5e5" font-weight="700" textLength="109.20" lengthAdjust="spacingAndGlyphs" xml:space="preserve">…/project/src</text>
+<path d="M375.00 66.00 V84.00" fill="none" stroke="#2472c8" stroke-width="1.4"/>
+<text x="387.60" y="79.00" fill="#bc3fbc" font-weight="700" textLength="67.20" lengthAdjust="spacingAndGlyphs" xml:space="preserve">git main</text>
+<text x="454.80" y="79.00" fill="#cd3131" font-weight="700" textLength="50.40" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> !? &gt;2</text>
+<path d="M26.40 93.00 H26.20 Q22.20 93.00 22.20 89.00 V84.00" fill="none" stroke="#2472c8" stroke-width="1.4"/>
+<path d="M26.40 93.00 H34.80" fill="none" stroke="#2472c8" stroke-width="1.4"/>
+<text x="34.80" y="97.00" fill="#0dbc79" font-weight="700" textLength="8.40" lengthAdjust="spacingAndGlyphs" xml:space="preserve">&gt;</text>
+<rect x="60.00" y="87.00" width="8.40" height="12" fill="#d4d4d4" opacity="0.8"/>
+<text x="18" y="128" fill="#8b8b8b" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12">Over ssh: orange frame and an ssh block</text>
+<rect x="43.20" y="138.00" width="42.00" height="18" fill="#ff8700"/>
+<path d="M26.40 147.00 H26.20 Q22.20 147.00 22.20 151.00 V156.00" fill="none" stroke="#ff8700" stroke-width="1.4"/>
+<path d="M26.40 147.00 H34.80" fill="none" stroke="#ff8700" stroke-width="1.4"/>
+<text x="43.20" y="151.00" fill="#000000" font-weight="700" textLength="42.00" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> ssh </text>
+<text x="93.60" y="151.00" fill="#e5e5e5" textLength="58.80" lengthAdjust="spacingAndGlyphs" xml:space="preserve">3:30 PM</text>
+<path d="M165.00 138.00 V156.00" fill="none" stroke="#ff8700" stroke-width="1.4"/>
+<text x="177.60" y="151.00" fill="#11a8cd" font-weight="700" textLength="42.00" lengthAdjust="spacingAndGlyphs" xml:space="preserve">alice</text>
+<text x="219.60" y="151.00" fill="#e5e5e5" textLength="8.40" lengthAdjust="spacingAndGlyphs" xml:space="preserve">@</text>
+<text x="228.00" y="151.00" fill="#ff8700" font-weight="700" textLength="84.00" lengthAdjust="spacingAndGlyphs" xml:space="preserve">webserver </text>
+<path d="M316.20 138.00 V156.00" fill="none" stroke="#ff8700" stroke-width="1.4"/>
+<text x="328.80" y="151.00" fill="#e5e5e5" font-weight="700" textLength="8.40" lengthAdjust="spacingAndGlyphs" xml:space="preserve">~</text>
+<path d="M26.40 165.00 H26.20 Q22.20 165.00 22.20 161.00 V156.00" fill="none" stroke="#ff8700" stroke-width="1.4"/>
+<path d="M26.40 165.00 H34.80" fill="none" stroke="#ff8700" stroke-width="1.4"/>
+<text x="34.80" y="169.00" fill="#0dbc79" font-weight="700" textLength="8.40" lengthAdjust="spacingAndGlyphs" xml:space="preserve">&gt;</text>
+<rect x="60.00" y="159.00" width="8.40" height="12" fill="#d4d4d4" opacity="0.8"/>
+<text x="18" y="200" fill="#8b8b8b" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12">root, second ssh hop, on the host that holds the VIP, after a slow command that failed</text>
+<rect x="43.20" y="210.00" width="50.40" height="18" fill="#ff8700"/>
+<path d="M26.40 219.00 H26.20 Q22.20 219.00 22.20 223.00 V228.00" fill="none" stroke="#ff8700" stroke-width="1.4"/>
+<path d="M26.40 219.00 H34.80" fill="none" stroke="#ff8700" stroke-width="1.4"/>
+<text x="43.20" y="223.00" fill="#000000" font-weight="700" textLength="50.40" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> ssh2 </text>
+<text x="102.00" y="223.00" fill="#e5e5e5" textLength="58.80" lengthAdjust="spacingAndGlyphs" xml:space="preserve">3:30 PM</text>
+<path d="M173.40 210.00 V228.00" fill="none" stroke="#ff8700" stroke-width="1.4"/>
+<text x="186.00" y="223.00" fill="#00afff" font-weight="700" textLength="33.60" lengthAdjust="spacingAndGlyphs" xml:space="preserve">root</text>
+<text x="219.60" y="223.00" fill="#e5e5e5" textLength="8.40" lengthAdjust="spacingAndGlyphs" xml:space="preserve">@</text>
+<text x="228.00" y="223.00" fill="#ff8700" font-weight="700" textLength="134.40" lengthAdjust="spacingAndGlyphs" xml:space="preserve">docker-network-1</text>
+<text x="362.40" y="223.00" fill="#e5e510" font-weight="700" textLength="50.40" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> [VIP]</text>
+<path d="M425.40 210.00 V228.00" fill="none" stroke="#ff8700" stroke-width="1.4"/>
+<text x="438.00" y="223.00" fill="#e5e5e5" font-weight="700" textLength="92.40" lengthAdjust="spacingAndGlyphs" xml:space="preserve">/opt/stacks</text>
+<path d="M543.00 210.00 V228.00" fill="none" stroke="#ff8700" stroke-width="1.4"/>
+<text x="555.60" y="223.00" fill="#e5e510" textLength="67.20" lengthAdjust="spacingAndGlyphs" xml:space="preserve">took 12s</text>
+<path d="M635.40 210.00 V228.00" fill="none" stroke="#ff8700" stroke-width="1.4"/>
+<text x="648.00" y="223.00" fill="#cd3131" font-weight="700" textLength="100.80" lengthAdjust="spacingAndGlyphs" xml:space="preserve">exit 1 ERROR</text>
+<path d="M26.40 237.00 H26.20 Q22.20 237.00 22.20 233.00 V228.00" fill="none" stroke="#ff8700" stroke-width="1.4"/>
+<path d="M26.40 237.00 H34.80" fill="none" stroke="#ff8700" stroke-width="1.4"/>
+<text x="34.80" y="241.00" fill="#cd3131" font-weight="700" textLength="8.40" lengthAdjust="spacingAndGlyphs" xml:space="preserve">&gt;</text>
+<rect x="60.00" y="231.00" width="8.40" height="12" fill="#d4d4d4" opacity="0.8"/>
+<text x="18" y="272" fill="#8b8b8b" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12">A python project, command not found</text>
+<path d="M26.40 291.00 H26.20 Q22.20 291.00 22.20 295.00 V300.00" fill="none" stroke="#2472c8" stroke-width="1.4"/>
+<path d="M26.40 291.00 H34.80" fill="none" stroke="#2472c8" stroke-width="1.4"/>
+<text x="43.20" y="295.00" fill="#e5e5e5" textLength="58.80" lengthAdjust="spacingAndGlyphs" xml:space="preserve">3:30 PM</text>
+<path d="M114.60 282.00 V300.00" fill="none" stroke="#2472c8" stroke-width="1.4"/>
+<text x="127.20" y="295.00" fill="#11a8cd" font-weight="700" textLength="42.00" lengthAdjust="spacingAndGlyphs" xml:space="preserve">alice</text>
+<text x="169.20" y="295.00" fill="#e5e5e5" textLength="8.40" lengthAdjust="spacingAndGlyphs" xml:space="preserve">@</text>
+<text x="177.60" y="295.00" fill="#2472c8" font-weight="700" textLength="58.80" lengthAdjust="spacingAndGlyphs" xml:space="preserve">laptop </text>
+<path d="M240.60 282.00 V300.00" fill="none" stroke="#2472c8" stroke-width="1.4"/>
+<text x="253.20" y="295.00" fill="#e5e5e5" font-weight="700" textLength="58.80" lengthAdjust="spacingAndGlyphs" xml:space="preserve">~/pyapp</text>
+<path d="M324.60 282.00 V300.00" fill="none" stroke="#2472c8" stroke-width="1.4"/>
+<text x="337.20" y="295.00" fill="#cd3131" font-weight="700" textLength="142.80" lengthAdjust="spacingAndGlyphs" xml:space="preserve">exit 127 NOTFOUND</text>
+<text x="480.00" y="295.00" fill="#d4d4d4" textLength="42.00" lengthAdjust="spacingAndGlyphs" xml:space="preserve"> via </text>
+<text x="522.00" y="295.00" fill="#e5e510" font-weight="700" textLength="92.40" lengthAdjust="spacingAndGlyphs" xml:space="preserve">py v3.13.5 </text>
+<path d="M26.40 309.00 H26.20 Q22.20 309.00 22.20 305.00 V300.00" fill="none" stroke="#2472c8" stroke-width="1.4"/>
+<path d="M26.40 309.00 H34.80" fill="none" stroke="#2472c8" stroke-width="1.4"/>
+<text x="34.80" y="313.00" fill="#cd3131" font-weight="700" textLength="8.40" lengthAdjust="spacingAndGlyphs" xml:space="preserve">&gt;</text>
+<rect x="60.00" y="303.00" width="8.40" height="12" fill="#d4d4d4" opacity="0.8"/>
+<text x="18" y="344" fill="#8b8b8b" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12">Square corners (for fonts that draw the rounded ones unevenly)</text>
+<path d="M26.40 363.00 H22.20 V372.00" fill="none" stroke="#2472c8" stroke-width="1.4"/>
+<path d="M26.40 363.00 H34.80" fill="none" stroke="#2472c8" stroke-width="1.4"/>
+<text x="43.20" y="367.00" fill="#e5e5e5" textLength="58.80" lengthAdjust="spacingAndGlyphs" xml:space="preserve">3:30 PM</text>
+<path d="M114.60 354.00 V372.00" fill="none" stroke="#2472c8" stroke-width="1.4"/>
+<text x="127.20" y="367.00" fill="#11a8cd" font-weight="700" textLength="42.00" lengthAdjust="spacingAndGlyphs" xml:space="preserve">alice</text>
+<text x="169.20" y="367.00" fill="#e5e5e5" textLength="8.40" lengthAdjust="spacingAndGlyphs" xml:space="preserve">@</text>
+<text x="177.60" y="367.00" fill="#2472c8" font-weight="700" textLength="58.80" lengthAdjust="spacingAndGlyphs" xml:space="preserve">laptop </text>
+<path d="M240.60 354.00 V372.00" fill="none" stroke="#2472c8" stroke-width="1.4"/>
+<text x="253.20" y="367.00" fill="#e5e5e5" font-weight="700" textLength="8.40" lengthAdjust="spacingAndGlyphs" xml:space="preserve">~</text>
+<path d="M26.40 381.00 H22.20 V372.00" fill="none" stroke="#2472c8" stroke-width="1.4"/>
+<path d="M26.40 381.00 H34.80" fill="none" stroke="#2472c8" stroke-width="1.4"/>
+<text x="34.80" y="385.00" fill="#0dbc79" font-weight="700" textLength="8.40" lengthAdjust="spacingAndGlyphs" xml:space="preserve">&gt;</text>
+<rect x="60.00" y="375.00" width="8.40" height="12" fill="#d4d4d4" opacity="0.8"/>
 </g>
 </svg>
