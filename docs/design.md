@@ -4,16 +4,21 @@ Why the prompt looks and works the way it does, what was tried, and the traps hi
 
 ## Structure: a prompt that works in zsh and bash, and a separate zsh setup
 
-The repo has two parts so one can be used without the other:
+The repo has separate parts so any can be used without the others:
 
-- **Prompt** (`config/prompt/`): `starship.toml` and `prompt.sh`. Starship already supports zsh and bash, and the TOML is
-  shell-independent, so everything that is not Starship's own config lives in **one POSIX-sh file**, `prompt.sh`, that both shells
-  source: the corner choice, the ssh hop counter and label, the switch to the orange config, the `ssh()` function, and finally
+- **Starship prompt** (`config/starship/`, installed by `install.sh`): `starship.toml` and `prompt.sh`. Starship already supports zsh and
+  bash, and the TOML is shell-independent, so everything that is not Starship's own config lives in **one POSIX-sh file**, `prompt.sh`, that
+  both shells source: the corner choice, the ssh hop counter and label, the switch to the orange config, the `ssh()` function, and finally
   `starship init zsh` or `starship init bash`, chosen with `$ZSH_VERSION` / `$BASH_VERSION`. One file means the two shells cannot drift
   apart. It has to stay POSIX: no arrays, no `[[ ]]`, no zsh glob qualifiers, nothing newer than bash 3.2 (macOS `/bin/bash`).
   Tested on bash 3.2, bash 5 and zsh 5.9; Starship's bash integration needs nothing else.
+- **Powerline prompt** (`config/powerline/`, installed by `install-powerline.sh`): see [Powerline](#powerline-as-a-separate-installer) below.
 - **zsh setup** (`config/zsh/`): history, completion, colors, key bindings, plugins. Zsh-only by nature (the plugins are zsh plugins),
   and optional (`--prompt-only`). See [zsh-setup.md](zsh-setup.md).
+- **`lib/common.sh`**: what the two installers share (users and login shells, packages, files, marked blocks, migration, smoke test,
+  `--uninstall`). Each installer is a short script that sources it and defines only its prompt-specific hooks (which files to place, the
+  block body, which packages, how to prove the prompt loaded). Both download the library and their config files through `curl | bash`, so
+  each stays a single command.
 
 ### Why marked blocks instead of replacing `~/.zshrc`
 
@@ -37,7 +42,44 @@ place on re-runs, backs the file up the first time, and removes the blocks again
   skipped rather than guessed.
 - The earlier whole-file layout is migrated automatically (recognised by its header), so re-running the installer on an old machine is safe.
 
-## Why
+## Powerline as a separate installer
+
+The first prompt of this setup was Powerline (the Debian `powerline` package on the guests, `powerline-shell` on the Mac). It is available
+again as `install-powerline.sh`, on purpose as **its own installer rather than a flag of `install.sh`**: it has a different dependency stack
+(an apt package, or a Python virtualenv), different configuration and different caveats, so it is updated and tested on its own, and the
+Starship installer does not grow options that only apply to the other prompt. The shared mechanics are in `lib/common.sh`, so the two cannot
+drift on shell detection, blocks, migration or uninstall. Choices:
+
+- **One `prompt` block.** Both installers write the same marked block, with a different body (`prompt.sh` or `powerline.sh` /
+  `powerline-shell.sh`). Switching prompts rewrites that block in place: never two prompts, `--uninstall` needs no special case. The other
+  prompt's files stay in `~/.config/shell-prompt-setup/`, unused.
+- **Backend by OS.** Linux: the `powerline` package (what the guests ran); macOS: `powerline-shell` (what the Mac ran). `--backend
+  powerline-shell` also works on Linux, and is what the tests use to cover it. The `powerline` package is Linux-only here.
+- **What of your old Powerline config is kept.** Compared with the package's defaults, your 46-file `~/.config/powerline` changed
+  nothing that matters except two things: `config.json` selects the `default_leftonly` shell theme (no truecolor), and that theme gained
+  the clock segment (`%l:%M %p`, priority 5). The other differences (weather and mail segments in the `wm` theme, a missing `workspace`
+  colour) are leftovers of copying another version's defaults. So the overlay is just those two files.
+- **The overlay is layered, not copied to `~/.config/powerline`.** `POWERLINE_CONFIG_PATHS=<package config>:<overlay>[:~/.config/powerline]`:
+  later paths win, and the **system directory has to be listed first**, otherwise the base themes are not found (verified: the overlay
+  is silently ignored in the other order, and the theme fails to load without the system path). A user's own `~/.config/powerline`, if any,
+  goes last and wins, so someone who customised Powerline for tmux or vim keeps that.
+- **powerline-shell in a private virtualenv** (`~/.config/shell-prompt-setup/venv`, created as the user): no pip into the system Python (blocked
+  by PEP 668 on current Debian and Homebrew), no sudo, no dependency on pipx, removed with the directory. It reads
+  `$XDG_CONFIG_HOME/powerline-shell/config.json`, so the prompt function sets `XDG_CONFIG_HOME` for **that one command only** (exporting it would
+  redirect every other tool's config): one directory per variant, `powerline-shell-patched/` and `powerline-shell-plain/`.
+- **Glyphs.** Powerline separators are Private Use Area glyphs (U+E0B0 ...) that only render with a patched font in the terminal you look
+  at, which is exactly what failed in a browser SSH terminal. The server cannot tell, so `--plain-from IP[,IP]` lists the ssh clients that
+  get the glyph-free theme (`ext.shell.top_theme=unicode` for `powerline`, `"mode": "compatible"` for powerline-shell); everyone else gets the
+  full look. The earlier approach (a client-side `LC_NERDFONT=1` marker sent by every glyph-capable machine) was dropped: it needs setup on
+  every client. `PROMPT_PLAIN=1` forces the plain theme. On macOS `--fonts` installs a patched font (Homebrew cask
+  `font-meslo-for-powerline`); choosing it in the terminal profile stays manual.
+- **An rc that already loads Powerline by hand** (the guests' `~/.bashrc` has the standard `# Powerline configuration` block) would draw two
+  prompts. The installer refuses to add a second one and says why; with `--force` it removes that standard block (after a backup) and
+  adds its own. Anything else that mentions Powerline is left for the user.
+- **Not ported on purpose:** the Starship prompt's own features (ssh depth label, orange frame over ssh, ahead/behind counts, VIP marker,
+  rounded/square corners). Powerline has its own segments and themes; a lookalike would be a different project.
+
+## Why plain-text symbols (the Starship prompt)
 
 A Powerline prompt draws its separators, git branch and lock with Private Use Area glyphs (U+E0A0-E0B3). Those only
 render when the **viewing** side has a Powerline/Nerd Font:
