@@ -66,8 +66,11 @@ Starship settings
   --square-from IP[,IP...]
                    Square corners (┌─ └─) instead of rounded for ssh sessions whose client address is
                    in the list (a browser SSH terminal whose font draws rounded ones unevenly).
-  --round-block    Rounded ends (half circles) on the ssh block, instead of a square one. Plain Unicode, no
-                   patched font; not used for clients listed with --square-from. --no-round-block turns it off.
+  --round-block [halfcircle|powerline]
+                   Rounded ends on the ssh block instead of a square one. halfcircle (the default) is plain
+                   Unicode, no patched font, but only about cap height. powerline is full height, a real
+                   rounded rectangle, but needs a Powerline-patched font (or a terminal that draws Powerline
+                   glyphs itself). Not used for clients listed with --square-from. --no-round-block turns it off.
 USAGE
 }
 
@@ -77,7 +80,14 @@ installer_option() {
     --vip=*)         VIP=${1#*=}; OPT_SHIFT=1 ;;
     --square-from)   SQUARE_FROM=${2:?--square-from needs addresses}; OPT_SHIFT=2 ;;
     --square-from=*) SQUARE_FROM=${1#*=}; OPT_SHIFT=1 ;;
-    --round-block)    ROUND_BLOCK=1; OPT_SHIFT=1 ;;
+    --round-block)
+      case "${2:-}" in
+        powerline|halfcircle) ROUND_BLOCK=$2; OPT_SHIFT=2 ;;
+        *) ROUND_BLOCK=1; OPT_SHIFT=1 ;;
+      esac ;;
+    --round-block=*)
+      ROUND_BLOCK=${1#*=}; OPT_SHIFT=1
+      case "$ROUND_BLOCK" in powerline|halfcircle) ;; *) die "--round-block style must be halfcircle or powerline, got '$ROUND_BLOCK'" ;; esac ;;
     --no-round-block) ROUND_BLOCK=0; OPT_SHIFT=1 ;;
     *) OPT_SHIFT=0 ;;
   esac

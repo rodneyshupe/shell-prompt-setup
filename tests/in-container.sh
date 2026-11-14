@@ -8,7 +8,7 @@ fail() { echo "FAIL: $*"; exit 1; }
 step() { echo "--- $*"; }
 INSTALL="bash $REPO/install.sh"
 
-apt-get update -qq >/dev/null && apt-get install -y -qq curl ca-certificates sudo iproute2 git openssh-server >/dev/null || fail "cannot install test tools"
+apt-get update -qq >/dev/null && apt-get install -y -qq curl ca-certificates sudo iproute2 git openssh-server original-awk >/dev/null || fail "cannot install test tools"
 command -v zsh >/dev/null && fail "the base image already has zsh; the bash-only checks need it absent"
 
 useradd -m -s /bin/bash bob      # bash user (Debian skeleton .bashrc / .profile)
@@ -140,6 +140,30 @@ useradd -m -s /bin/bash carol
 curl -fsSL "$HTTP_BASE/install.sh" | bash -s -- --users carol --base-url "$HTTP_BASE" || fail "curl-style install failed"
 [ -s /home/carol/.config/shell-prompt-setup/prompt.sh ] && grep -q 'shell-prompt-setup: prompt >>>' /home/carol/.bashrc || fail "curl-style result"
 
+step "10b. --round-block powerline: full-height Powerline caps; invalid style rejected"
+useradd -m -s /bin/bash cap
+$INSTALL --users cap --round-block powerline --square-from 10.9.9.9 --no-packages >/dev/null || fail "--round-block powerline failed"
+grep -q 'PROMPT_ROUND_BLOCK=powerline' /home/cap/.config/shell-prompt-setup/settings.sh || fail "style not written to settings.sh"
+o=$(su cap -c "env SSH_CONNECTION='10.1.1.1 5 10.0.0.1 22' bash -i -c 'starship prompt'" 2>&1)
+echo "$o" | grep -a -q "$(printf '\xee\x82\xb6')" && echo "$o" | grep -a -q "$(printf '\xee\x82\xb4')" || fail "Powerline caps missing for an unlisted ssh client"
+echo "$o" | grep -a -q "$(printf '\xe2\x97\x96')" && fail "half circles shown together with the Powerline caps"
+o=$(su cap -c "env SSH_CONNECTION='10.9.9.9 5 10.0.0.1 22' bash -i -c 'starship prompt'" 2>&1)
+echo "$o" | grep -a -q "$(printf '\xee\x82\xb6')" && fail "a listed (square) client got the Powerline caps"
+$INSTALL --users cap --round-block=nonsense --no-packages >/dev/null 2>&1 && fail "expected an error for an invalid --round-block style"
+
+step "10c. settings.sh with a BSD-style awk (macOS's awk is not GNU/mawk): create, update in place, keep the other settings"
+mkdir -p /tmp/bsdawk && ln -sf "$(command -v original-awk)" /tmp/bsdawk/awk
+useradd -m -s /bin/bash bsd
+BSD="env PATH=/tmp/bsdawk:$PATH bash $REPO/install.sh"
+$BSD --users bsd --vip 10.0.0.10 --square-from 10.9.9.9 --round-block powerline --no-packages >/dev/null || fail "bsd awk: first install failed"
+grep -q 'PROMPT_ROUND_BLOCK=powerline' /home/bsd/.config/shell-prompt-setup/settings.sh || fail "bsd awk: settings missing after the first install"
+$BSD --users bsd --round-block halfcircle --no-packages >/dev/null || fail "bsd awk: update failed"
+S=/home/bsd/.config/shell-prompt-setup/settings.sh
+[ "$(grep -c '^export' $S)" = 3 ] || fail "bsd awk: expected 3 settings, got: $(cat $S)"
+grep -q 'PROMPT_VIP=10.0.0.10' $S && grep -q 'PROMPT_SQUARE_FROM="10.9.9.9"' $S || fail "bsd awk: the other settings were lost: $(cat $S)"
+grep -q 'PROMPT_ROUND_BLOCK=halfcircle' $S && ! grep -q 'PROMPT_ROUND_BLOCK=powerline' $S || fail "bsd awk: the setting was not updated in place"
+[ "$(grep -n 'PROMPT_ROUND_BLOCK' $S | cut -d: -f1)" = 4 ] || fail "bsd awk: the update moved the setting: $(cat $S)"
+
 step "12. an rc that already loads another prompt by hand: refused, or (--force) the standard snippets are removed"
 useradd -m -s /bin/bash nod; useradd -m -s /bin/bash dby; useradd -m -s /bin/bash hnd
 # nod: the powerline-shell snippet exactly as found on the Proxmox nodes
@@ -171,6 +195,16 @@ EOS
 printf '\neval "$(starship init bash)"\nalias keepme=1\n' >> /home/hnd/.bashrc
 chown nod:nod /home/nod/.bashrc; chown dby:dby /home/dby/.bashrc; chown hnd:hnd /home/hnd/.bashrc
 for u in nod dby hnd; do cp /home/$u/.bashrc /tmp/$u.bashrc; done
+# cmt: the same snippets, but commented out: nothing to conflict with, so no refusal and nothing removed
+useradd -m -s /bin/bash cmt
+cat >> /home/cmt/.bashrc <<'EOS'
+#function _update_ps1() {
+#    PS1=$(powerline-shell $?)
+#}
+# eval "$(starship init bash)"
+EOS
+chown cmt:cmt /home/cmt/.bashrc; cp /home/cmt/.bashrc /tmp/cmt.bashrc
+
 
 $INSTALL --users nod >/tmp/nod.out 2>&1 && fail "expected a non-zero exit when .bashrc already loads another prompt"
 grep -q "already loads another prompt" /tmp/nod.out || fail "no explanation: $(tail -3 /tmp/nod.out)"
@@ -189,6 +223,8 @@ grep -q '^# Powerline configuration' /home/dby/.bashrc && fail "the Debian Power
 grep -q 'alias keepme=1' /home/dby/.bashrc || fail "dby's own line after the block was removed"
 [ "$(grep -c 'shell-prompt-setup: prompt >>>' /home/dby/.bashrc)" = 1 ] || fail "dby: our block missing"
 
+$INSTALL --users cmt >/tmp/cmt.out 2>&1 || fail "commented-out prompt lines must not block the install: $(tail -3 /tmp/cmt.out)"
+grep -q '^#function _update_ps1' /home/cmt/.bashrc && grep -q 'shell-prompt-setup: prompt >>>' /home/cmt/.bashrc || fail "cmt: commented lines should stay and our block be added"
 $INSTALL --users hnd --force >/tmp/hnd.out 2>&1 && fail "expected a refusal for a hand-written starship init, even with --force"
 cmp -s /tmp/hnd.bashrc /home/hnd/.bashrc || fail "a hand-written starship init was touched"
 grep -q "already loads another prompt" /tmp/hnd.out || fail "no explanation for the hand-written init"
@@ -278,10 +314,17 @@ checks() {
   p=$(txt $u $sh "-u SSH_CONNECTION" /tmp | head -1); echo "$p" | grep -q '│ *$' && fail "$sh: stray separator outside a repo: [$p]"
   rm -rf $W
 
-  step "$sh: VIP marker follows the address"
-  p=$(txt $u $sh "-u SSH_CONNECTION" | head -1); echo "$p" | grep -q '\[VIP\]' && fail "$sh: VIP shown without the address"
+  step "$sh: VIP block (black on green) follows the address, rounded like the ssh block over ssh"
+  p=$(txt $u $sh "-u SSH_CONNECTION" | head -1); echo "$p" | grep -q ' VIP ' && fail "$sh: VIP shown without the address: $p"
   if ip addr add 10.0.0.10/32 dev lo 2>/dev/null; then
-    p=$(txt $u $sh "-u SSH_CONNECTION" | head -1); echo "$p" | grep -q '\[VIP\]' || fail "$sh: VIP not shown while held: $p"
+    p=$(txt $u $sh "-u SSH_CONNECTION" | head -1)
+    echo "$p" | grep -q ' VIP ' || fail "$sh: VIP not shown while held: $p"
+    echo "$p" | grep -q '◖' && fail "$sh: caps on the VIP block in a local shell: $p"
+    r=$(raw $u $sh "-u SSH_CONNECTION"); echo "$r" | grep -a -q '48;5;40;38;5;16' || fail "$sh: the VIP block is not black on green"
+    echo "$r" | grep -a -q '33m.*VIP' && fail "$sh: the VIP is still yellow"
+    p=$(txt $u $sh "$SSHENV" | head -1);                                  echo "$p" | grep -q '◖ VIP ◗' || fail "$sh: the VIP block is not rounded over ssh: $p"
+    r=$(raw $u $sh "$SSHENV");                                            echo "$r" | grep -a -q '38;5;40m◖' || fail "$sh: the VIP caps are not green"
+    p=$(txt $u $sh "SSH_CONNECTION='10.9.9.9 5 10.0.0.1 22'" | head -1);  echo "$p" | grep -q ' VIP ' && ! echo "$p" | grep -q '◖ VIP' || fail "$sh: a listed (square) client must get the square VIP block: $p"
     ip addr del 10.0.0.10/32 dev lo
   else echo "(skipped: cannot add an address in this container)"; fi
 }

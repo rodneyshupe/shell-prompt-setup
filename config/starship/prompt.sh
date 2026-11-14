@@ -39,13 +39,19 @@ if [ -n "${SSH_CONNECTION:-}" ]; then
   esac
   if [ "$PROMPT_HOPS" -gt 1 ]; then PROMPT_SSH_LABEL=ssh$PROMPT_HOPS; else PROMPT_SSH_LABEL=ssh; fi
   export PROMPT_HOPS PROMPT_SSH_LABEL
-  # Rounded ends for the ssh block: opt in with PROMPT_ROUND_BLOCK=1 (settings.sh, install.sh --round-block). Not for
-  # a client that already gets square corners, because that is a font that draws rounded shapes badly.
-  if [ "${PROMPT_ROUND_BLOCK:-}" = 1 ] && [ -z "$_sps_square" ]; then
-    export PROMPT_BLOCK_CAP_L='◖' PROMPT_BLOCK_CAP_R='◗'
-  else
-    unset PROMPT_BLOCK_CAP_L PROMPT_BLOCK_CAP_R
+  # Rounded ends for the ssh block, opt in with PROMPT_ROUND_BLOCK (settings.sh, install.sh --round-block):
+  #   1 or halfcircle  the Unicode half circles, no patched font, but only about cap height
+  #   powerline        Powerline's rounded caps, full height, but they need a Powerline-patched font (or a terminal
+  #                    that draws Powerline glyphs itself)
+  # Not for a client that already gets square corners, because that is a font that draws rounded shapes badly.
+  _sps_cap=
+  if [ -z "$_sps_square" ]; then
+    case "${PROMPT_ROUND_BLOCK:-}" in
+      1|halfcircle) PROMPT_BLOCK_CAP_L='◖'; PROMPT_BLOCK_CAP_R='◗'; _sps_cap=1 ;;
+      powerline)    PROMPT_BLOCK_CAP_L=$(printf '\356\202\266'); PROMPT_BLOCK_CAP_R=$(printf '\356\202\264'); _sps_cap=1 ;;
+    esac
   fi
+  if [ -n "$_sps_cap" ]; then export PROMPT_BLOCK_CAP_L PROMPT_BLOCK_CAP_R; else unset PROMPT_BLOCK_CAP_L PROMPT_BLOCK_CAP_R; fi
   [ -r "$_sps_dir/starship-ssh.toml" ] && _sps_config=$_sps_dir/starship-ssh.toml
 else
   unset PROMPT_HOPS PROMPT_SSH_LABEL PROMPT_BLOCK_CAP_L PROMPT_BLOCK_CAP_R
@@ -64,4 +70,4 @@ if command -v starship >/dev/null 2>&1; then
   fi
 fi
 
-unset _sps_dir _sps_square _sps_config
+unset _sps_dir _sps_square _sps_config _sps_cap

@@ -89,7 +89,7 @@ def parse_line(line):
 
 
 def plain(cells):
-    s = "".join(PL_PLAIN.get(c[0], c[0]) for c in cells)
+    s = "".join({chr(0xe0b6): chr(0x25d6), chr(0xe0b4): chr(0x25d7)}.get(c[0], PL_PLAIN.get(c[0], c[0])) for c in cells)
     return s.rstrip()
 
 
@@ -112,6 +112,7 @@ def runs(cells):
 # Box-drawing characters are drawn as lines that span the whole cell, the way a terminal draws them, so the
 # strokes of two rows meet (a font glyph stops short of the cell edge and leaves a gap).
 BOX = {chr(c) for c in (0x2500, 0x2502, 0x250c, 0x2510, 0x2514, 0x2518, 0x256d, 0x256e, 0x256f, 0x2570)}
+CAPS = {chr(0xe0b6), chr(0xe0b4)}          # Powerline rounded caps, full cell height
 HALF = {chr(0x25d6), chr(0x25d7)}       # half circles used as rounded block ends: drawn as shapes, whatever the font
 
 
@@ -147,6 +148,15 @@ def draw_line(cells, y):
         i = 0
         while i < len(text):
             ch = text[i]
+            if ch in CAPS:
+                gx = x + i * CW
+                if ch == chr(0xe0b6):               # left cap: half ellipse, flat edge on the right, full height
+                    d = "M%.2f %.2f A%.2f %.2f 0 0 0 %.2f %.2f Z" % (gx + CW, y, CW, LH / 2, gx + CW, y + LH)
+                else:                               # right cap
+                    d = "M%.2f %.2f A%.2f %.2f 0 0 1 %.2f %.2f Z" % (gx, y, CW, LH / 2, gx, y + LH)
+                frag.append('<path d="%s" fill="%s"/>' % (d, fg or FG_DEFAULT))
+                i += 1
+                continue
             if ch in HALF:
                 gx, rad = x + i * CW, (LH - 4) / 2
                 if ch == chr(0x25d6):               # left half disc, flat edge on the right
@@ -174,7 +184,7 @@ def draw_line(cells, y):
                 i += 1
                 continue
             j = i
-            while j < len(text) and text[j] not in PL_PLAIN and text[j] not in BOX and text[j] not in HALF:
+            while j < len(text) and text[j] not in PL_PLAIN and text[j] not in BOX and text[j] not in HALF and text[j] not in CAPS:
                 j += 1
             seg = text[i:j]
             if seg.strip():
@@ -200,7 +210,8 @@ def main():
         lines = [l for l in raw.split("\n") if l.strip() != ""]
         blocks.append((cap, [parse_line(l) for l in lines]))
 
-    cols = max(len(l) for _, ls in blocks for l in ls) + 4
+    # wide enough for the longest prompt line and for the captions (12px sans text is about 0.75 of a terminal cell per character)
+    cols = max(max(len(l) for _, ls in blocks for l in ls), max(int(len(cap) * 0.75) for cap, _ in blocks)) + 4
     width = PAD * 2 + cols * CW
     y = 44                                    # below the title bar
     body, txt = [], []

@@ -7,7 +7,7 @@
 # Preview a change without opening a new shell:  starship prompt
 
 format = """
-${env_var.PROMPT_CORNER_TOP}[ ](bold blue)(${env_var.PROMPT_BLOCK_CAP_L}${env_var.PROMPT_SSH_LABEL}${env_var.PROMPT_BLOCK_CAP_R}[ ](bold blue))$time[ │ ](bold blue)$username$hostname${custom.vip}[ │ ](bold blue)$directory\
+${env_var.PROMPT_CORNER_TOP}[ ](bold blue)(${env_var.PROMPT_BLOCK_CAP_L}${env_var.PROMPT_SSH_LABEL}${env_var.PROMPT_BLOCK_CAP_R}[ ](bold blue))$time[ │ ](bold blue)$username$hostname( ${custom.vipcapl}${custom.vip}${custom.vipcapr})[ │ ](bold blue)$directory\
 ([ │ ](bold blue)$git_branch$git_status${custom.gitsync})$cmd_duration$status $all\
 ${env_var.PROMPT_CORNER_BOTTOM}$character"""
 
@@ -99,14 +99,27 @@ command = '''git rev-list --left-right --count '@{upstream}...HEAD' 2>/dev/null 
 style = "bold red"
 format = "([ $output]($style))"
 
-# Optional marker for a host that holds a floating/virtual IP (keepalived, HA pairs, ...).
-# Set PROMPT_VIP=<address> in settings.sh (install.sh --vip <address> does that); the
-# marker shows only while this host has that address. Unset: nothing is shown.
+# Optional marker for a host that holds a floating/virtual IP (keepalived, HA pairs, ...): a black-on-green block,
+# rounded the same way as the ssh block (the caps are PROMPT_BLOCK_CAP_L / _R, set by prompt.sh in an ssh session
+# when --round-block is on, and green here). Set PROMPT_VIP=<address> in settings.sh (install.sh --vip <address>
+# does that); the block shows only while this host has that address. Unset: nothing is shown.
+# The three modules use the same `when`; the caps print nothing when no caps are set, so the group in `format`
+# collapses to the plain square block. (40 = green.)
 [custom.vip]
 when = '[ -n "$PROMPT_VIP" ] && ip -4 -o addr show 2>/dev/null | grep -q " $PROMPT_VIP/"'
 command = "echo VIP"
-style = "bold yellow"
-format = "[ \\[$output\\]]($style)"
+style = "bold fg:16 bg:40"
+format = "[ $output ]($style)"
+
+[custom.vipcapl]
+when = '[ -n "$PROMPT_VIP" ] && ip -4 -o addr show 2>/dev/null | grep -q " $PROMPT_VIP/"'
+command = 'printf %s "$PROMPT_BLOCK_CAP_L"'
+format = "[$output](fg:40)"
+
+[custom.vipcapr]
+when = '[ -n "$PROMPT_VIP" ] && ip -4 -o addr show 2>/dev/null | grep -q " $PROMPT_VIP/"'
+command = 'printf %s "$PROMPT_BLOCK_CAP_R"'
+format = "[$output](fg:40)"
 
 # ---- Plain-text symbols for everything else (from `starship preset plain-text-symbols`) ----
 [git_commit]

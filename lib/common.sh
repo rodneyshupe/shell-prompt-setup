@@ -337,7 +337,8 @@ bash_rc_for() {
 FOREIGN_PROMPT='bindings/(bash|zsh)/powerline|powerline-daemon|_update_ps1|powerline-shell|starship init|oh-my-posh init'
 
 foreign_prompt_lines() {   # lines of the rc file that load another prompt, outside our own blocks
-  awk '/^# >>> shell-prompt-setup: /{skip=1} !skip{print} /^# <<< shell-prompt-setup: /{skip=0}' "$1" | grep -n -E "$FOREIGN_PROMPT" | head -3
+  # commented-out lines cannot conflict, so they are ignored
+  awk '/^# >>> shell-prompt-setup: /{skip=1} !skip{print} /^# <<< shell-prompt-setup: /{skip=0}' "$1" | grep -n -E "$FOREIGN_PROMPT" | grep -v -E '^[0-9]+:[[:space:]]*#' | head -3
 }
 
 prompt_conflict_guard() {
@@ -417,27 +418,26 @@ EOF
 # ---- settings (settings.sh: plain export lines read by the prompt loaders) ---------------------------
 # settings_put <settings file> <user> NAME=value...: updates only the given settings, each in the place where it
 # already is (so a re-run does not reorder the file), new ones are appended; the value is written as is (quote it
-# yourself).
+# yourself). The new lines go to awk through a file, not a -v variable: macOS's BSD awk rejects a newline in -v.
 settings_put() {
-  local f=$1 u=$2 tmp kv lines=""; shift 2
+  local f=$1 u=$2 tmp newf kv; shift 2
   [ $# -gt 0 ] || return 0
-  tmp=$(mktemp "${TMPDIR:-/tmp}/sps-settings.XXXXXX")
-  for kv in "$@"; do lines="$lines
-export $kv"; done
+  tmp=$(mktemp "${TMPDIR:-/tmp}/sps-settings.XXXXXX"); newf=$(mktemp "${TMPDIR:-/tmp}/sps-settings-new.XXXXXX")
+  for kv in "$@"; do echo "export $kv"; done > "$newf"
   {
     echo "# shell-prompt-setup settings: plain export lines read by the prompt loader (the installers update them)."
     if [ -f "$f" ]; then
-      awk -v new="$lines" '
-        BEGIN { n = split(new, L, "\n"); for (i = 1; i <= n; i++) { if (L[i] == "") continue; k = L[i]; sub(/=.*/, "", k); K[k] = L[i]; order[++m] = k } }
+      awk '
+        NR == FNR { k = $0; sub(/=.*/, "", k); K[k] = $0; order[++m] = k; next }
         /^# shell-prompt-setup settings/ { next }
         { done = 0; for (k in K) if (index($0, k "=") == 1) { print K[k]; seen[k] = 1; done = 1; break } if (!done) print }
-        END { for (i = 1; i <= m; i++) if (!seen[order[i]]) print K[order[i]] }' "$f"
+        END { for (i = 1; i <= m; i++) if (!seen[order[i]]) print K[order[i]] }' "$newf" "$f"
     else
-      for kv in "$@"; do echo "export $kv"; done
+      cat "$newf"
     fi
   } > "$tmp"
   place "$tmp" "$f" "$u" always
-  rm -f "$tmp"
+  rm -f "$tmp" "$newf"
 }
 
 # ---- migration from the first layout (whole-file ~/.zshrc, ~/.config/starship*.toml, ~/.zshrc.local) ----

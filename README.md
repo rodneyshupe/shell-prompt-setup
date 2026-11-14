@@ -36,10 +36,10 @@ Reading line 1, left to right:
 | Part | Meaning |
 |---|---|
 | `╭─` ... `╰─>` | The frame. Blue on your own machine, **orange** in an ssh session. `┌─ └─` (square) where a font draws the rounded corners unevenly. |
-| `ssh` / `ssh2` / `ssh3` | Only in an ssh session: a black-on-orange block. `ssh2` means you ssh'd again from an ssh session. With `--round-block` its ends are rounded (`◖ ssh ◗`). |
+| `ssh` / `ssh2` / `ssh3` | Only in an ssh session: a black-on-orange block. `ssh2` means you ssh'd again from an ssh session. With `--round-block` its ends are rounded (`◖ ssh ◗`, or full-height with `--round-block powerline`). |
 | `3:30 PM` | The clock. |
 | `alice@laptop` | User (cyan; **azure for root**) and host (the frame color: blue locally, orange over ssh). |
-| `[VIP]` | This host currently holds a floating address you configured (keepalived and the like). |
+| `VIP` | A green block: this host currently holds a floating address you configured (keepalived and the like). Rounded the same way as the `ssh` block with `--round-block`. |
 | `project/src` | Folder, up to 6 levels, `…/` when shortened. |
 | `git main !? >2` | Branch; `!` modified, `+` staged, `?` untracked, `x` deleted, `$` stash, `=` conflicts; `>2` two commits ahead of the upstream, `<3` three behind, `> <3` both. A count shows only above 1. |
 | `took 12s`, `exit 1 ERROR` | Only when relevant: a slow command, or the last command failed. |
@@ -57,7 +57,7 @@ The **patched font** is what draws the arrow separators; without one they show a
 **Powerline look (needs a Powerline-patched font); this package shows the host name only over ssh**, as plain text:
 
 ```text
-  3:30 PM ▶ alice ▶ ⎇ main ▶ ~ › project › src ▶
+ 3:30 PM ▶ alice ▶ ⎇ main ▶ ~ › project › src ▶
 ```
 
 All the situations in the picture, as plain text: [docs/images/powerline.txt](docs/images/powerline.txt).
@@ -144,7 +144,7 @@ The Starship prompt needs nothing. Powerline needs a Powerline-patched font **in
 
 ### 5. Tune, switch, undo
 
-- **Per-machine settings** live in `~/.config/shell-prompt-setup/settings.sh`: `--vip ADDRESS` (the `[VIP]` marker), `--round-block` (rounded ends on the ssh block), `--square-from IP[,IP]` (square corners
+- **Per-machine settings** live in `~/.config/shell-prompt-setup/settings.sh`: `--vip ADDRESS` (the green VIP block), `--round-block` (rounded ends on the ssh block), `--square-from IP[,IP]` (square corners
   for those ssh clients), `--plain-from IP[,IP]` (glyph-free Powerline), or set `PROMPT_CORNERS=square` / `PROMPT_PLAIN=1` there for everywhere.
 - **Switch prompts** by running the other installer: both write the same single block in `~/.zshrc` / `~/.bashrc`, so you never get two prompts.
 - **Update** by re-running the installer. Files you edited in `~/.config/shell-prompt-setup/` are kept and reported; add `--force` to replace them (a backup is kept).
@@ -186,9 +186,9 @@ Only `install.sh` (Starship):
 
 | Option | What it does |
 |---|---|
-| `--vip ADDRESS` | Show a bold yellow `[VIP]` after the host name while this host holds `ADDRESS` (keepalived, HA pairs). |
+| `--vip ADDRESS` | Show a green `VIP` block after the host name while this host holds `ADDRESS` (keepalived, HA pairs). It rounds the same way as the `ssh` block (`--round-block`), and stays square for `--square-from` clients. |
 | `--square-from IP[,IP...]` | Square corners (`┌─ └─`) instead of rounded for ssh sessions whose client address is in the list. |
-| `--round-block` | Rounded ends (the half circles `◖` `◗`, plain Unicode, no patched font) on the ssh block instead of a square one. Not used for clients listed with `--square-from`. `--no-round-block` turns it off again. Written to `settings.sh` as `PROMPT_ROUND_BLOCK=1`. |
+| `--round-block [halfcircle\|powerline]` | Rounded ends on the ssh block instead of a square one. `halfcircle` (the default) is plain Unicode `◖ ◗`, no patched font, but only about cap height. `powerline` is full height, a real rounded rectangle, but needs the Powerline rounded caps (U+E0B6/E0B4): a Nerd Font or "Powerline Extra Symbols" font, or a terminal that draws them itself. The classic Powerline-patched fonts only have the four arrow glyphs, not these. Not used for clients listed with `--square-from`. `--no-round-block` turns it off. Written to `settings.sh` as `PROMPT_ROUND_BLOCK`. |
 
 Only `install-powerline.sh`:
 

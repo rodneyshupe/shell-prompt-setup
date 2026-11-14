@@ -128,6 +128,11 @@ that switches look per connection.
   A client listed in `PROMPT_SQUARE_FROM` keeps the square block: its font is already the reason for square corners. Mechanically the caps are two more
   `env_var` modules that `prompt.sh` sets only in an ssh session, and the whole group is wrapped in `( ... )` in `format` so it disappears unless one of
   them is set. The label module therefore no longer carries its own trailing space (the group does).
+  **The half circles turned out not to be what was wanted** (they are only about cap height, so the block does not read as a rounded rectangle), which led to a second
+  style, `--round-block powerline`, with Powerline's U+E0B6 / U+E0B4: full cell height, a true rounded rectangle. It only works where the glyphs exist, and that is
+  narrower than "has a Powerline font": the classic Powerline-patched fonts (powerline/fonts) contain the arrows U+E0B0-E0B3 and the branch/line/lock symbols but **not** the
+  rounded caps, which come from Nerd Fonts / "Powerline Extra Symbols"; some terminals (iTerm2 with "Draw Powerline Glyphs" and its extended-symbols option, Kitty, WezTerm,
+  Ghostty) draw them themselves. The server cannot see any of that, so both styles are opt-in and a client that is not known to cope is covered by `--square-from`.
 - **Ahead/behind:** Starship's `git_status` can only show a count always or never, so the counts come from a `custom.gitsync` module
   (`git rev-list --left-right --count @{upstream}...HEAD`): `>` for one ahead, `>3` for three, `<`/`<2` behind, `> <2` both. Counts show
   only above 1. It prints nothing outside a repo or without an upstream. Custom modules are off unless `when` is set (`when = true`),
@@ -151,53 +156,12 @@ that switches look per connection.
 - **Completion:** case-insensitive, then fragments of a name (`docker-comp<Tab>`); ghost text from history first, then
   from real files and folders (`ZSH_AUTOSUGGEST_STRATEGY=(history completion)`). Glob characters (`*`) and history
   expansion (`!!`) are bold cyan because the highlighter's default blue is unreadable on dark backgrounds.
-- **VIP marker:** a `custom` module shows a bold yellow `[VIP]` while the host has the address in `$PROMPT_VIP`
-  (keepalived etc.). The check is `ip -4 -o addr show | grep` on every prompt and costs about 1-2 ms of a roughly 15 ms
-  render. It is read when the prompt draws, so it lags a failover until the next Enter.
-
-### Rejected alternatives
-
-| Option | Why not |
-|---|---|
-| Keep Powerline, switch theme per connection | Needed a client-side marker (an env var sent by ssh `SetEnv`); still two looks to maintain. |
-| Pure | Nice and font-safe, but zsh-only and minimal; no clock without extra work. |
-| Oh My Posh | Same idea as Starship, wordier config. |
-| Powerlevel10k | zsh-only and in limited-maintenance mode. |
-| Kali/Parrot-style bracket prompts | Previewed; preferred `│` separators without brackets. |
-
-## What it looks like
-
-```
-╭─ 3:30 PM │ root@webserver │ …/project │ git main !? >2
-╰─> _
-
-╭─ ssh  3:30 PM │ root@webserver │ ~   (orange frame, orange `ssh` block; `ssh2` after a second hop)
-╰─> _
-
-╭─ 3:30 PM │ root@webserver │ …/project/config/nginx │ git main !? │ exit 1 ERROR
-╰─> _
-
-┌─ 3:30 PM │ root@webserver │ /opt/stacks │ took 12s │ exit 127 NOTFOUND
-╰─> _
-```
-
-Git symbols (plain-text preset, bold red, after the branch name, e.g. `git main +!?>`):
-
-| Symbol | Meaning |
-|---|---|
-| `!` | modified, not staged |
-| `+` | staged |
-| `?` | untracked |
-| `x` | deleted |
-| `r` | renamed |
-| `=` | merge conflicts |
-| `$` | stash present |
-| `>` `>3` / `<` `<2` / `> <2` | ahead of / behind / both, from the upstream; a count only above 1; only as fresh as the last `git fetch` |
-
-During a git operation `git_state` adds e.g. `(REBASING 2/5)`, `(MERGING)`, `(CHERRY-PICKING)`, `(BISECTING)`.
-
-## Format-string gotchas (hit while building `starship.toml`)
-
+- **VIP block:** a `custom` module shows a black-on-green `VIP` block while the host has the address in `$PROMPT_VIP` (keepalived etc.), and it is rounded
+  the same way as the ssh block: two more `custom` modules print `$PROMPT_BLOCK_CAP_L` / `_R` (set by `prompt.sh` in an ssh session when `--round-block` is on) in green,
+  and the group in `format` collapses to a plain square block when they print nothing. It was a bold yellow `[VIP]` first; green separates it from the orange ssh
+  block next to it (yellow is close to orange). The check is `ip -4 -o addr show | grep`, run by each of the three modules, in parallel (Starship renders modules
+  concurrently), on every prompt, and only where `PROMPT_VIP` is set (elsewhere the `when` fails at once); it costs a few ms of a roughly 15 ms render. It is read when
+  the prompt draws, so it lags a failover until the next Enter.
 - `(`, `)`, `[`, `]` are special in Starship format strings; escape them as `\\(` etc. in TOML basic strings.
 - A module's `format` can't reference another module (`$git_status` inside `git_branch.format` renders nothing). Put both in
   the top-level `format` and wrap them in a `( ... )` conditional group so the separator disappears outside a repo.

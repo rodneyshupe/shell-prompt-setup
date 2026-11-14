@@ -2,16 +2,20 @@
 ╭─ 3:30 PM │ alice@laptop │ …/project/src │ git main !? >2
 ╰─>
 
-# Over ssh: orange frame and an ssh block
+# Over ssh: orange frame and a square ssh block (the default)
 ╭─  ssh  3:30 PM │ alice@webserver │ ~
+╰─>
+
+# Over ssh with --round-block powerline: a full-height rounded block (needs a font or terminal with the Powerline rounded caps U+E0B6/E0B4)
+╭─ ◖ ssh ◗ 3:30 PM │ alice@webserver │ ~
 ╰─>
 
 # Over ssh with --round-block: rounded ends from plain Unicode half circles, no patched font (drawn as shapes here; your terminal draws them with its own font)
 ╭─ ◖ ssh ◗ 3:30 PM │ alice@webserver │ ~
 ╰─>
 
-# root, second ssh hop, on the host that holds the VIP, after a slow command that failed
-╭─  ssh2  3:30 PM │ root@docker-network-1 [VIP] │ /opt/stacks │ took 12s │ exit 1 ERROR
+# root, second ssh hop, on the host that holds the VIP, after a slow command that failed (rounded block)
+╭─ ◖ ssh2 ◗ 3:30 PM │ root@docker-network-1 ◖ VIP ◗ │ /opt/stacks │ took 12s │ exit 1 ERROR
 ╰─>
 
 # A python project, command not found
