@@ -35,7 +35,9 @@ for fam, title in titles.items():
             blocks.append(cur)
         elif cur is not None and line != "":
             cur[1].append(line)
-    md = "\n".join("**%s**\n\n```text\n%s\n```\n" % (cap, "\n".join(ls)) for cap, ls in blocks)
+    # only the first situation is repeated as plain text here; the picture shows them all, the .txt file has them all
+    cap, ls = blocks[0]
+    md = "**%s**, as plain text:\n\n```text\n%s\n```\n\nAll the situations in the picture, as plain text: [docs/images/%s.txt](docs/images/%s.txt).\n" % (cap, "\n".join(ls), fam, fam)
     pat = re.compile(r"(<!-- examples:%s -->\n).*?(<!-- /examples:%s -->)" % (re.escape(fam), re.escape(fam)), re.S)
     if pat.search(readme):
         readme = pat.sub(lambda m: m.group(1) + "\n" + md + "\n" + m.group(2), readme)

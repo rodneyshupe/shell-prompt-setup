@@ -12,7 +12,7 @@ friendlier zsh (autosuggestions, syntax highlighting, smarter Tab completion, hi
 ## What the prompts look like
 
 Every picture below is **real output**, captured from the installed prompts (the clock, host and user names are fixed for the screenshots).
-Each has a color image and the same thing as plain text, for terminals and readers without color.
+Each prompt has a color image of every situation, and the first one again as plain text for readers without color (all of them are in `docs/images/*.txt`).
 
 ### Starship prompt
 
@@ -20,40 +20,14 @@ Each has a color image and the same thing as plain text, for terminals and reade
 
 <!-- examples:starship -->
 
-**Your own machine: a git repo with changes, two commits ahead of its upstream**
+**Your own machine: a git repo with changes, two commits ahead of its upstream**, as plain text:
 
 ```text
 ╭─ 3:30 PM │ alice@laptop │ …/project/src │ git main !? >2
 ╰─>
 ```
 
-**Over ssh: orange frame and an ssh block**
-
-```text
-╭─  ssh  3:30 PM │ alice@webserver │ ~
-╰─>
-```
-
-**root, second ssh hop, on the host that holds the VIP, after a slow command that failed**
-
-```text
-╭─  ssh2  3:30 PM │ root@docker-network-1 [VIP] │ /opt/stacks │ took 12s │ exit 1 ERROR
-╰─>
-```
-
-**A python project, command not found**
-
-```text
-╭─ 3:30 PM │ alice@laptop │ ~/pyapp │ exit 127 NOTFOUND via py v3.13.5
-╰─>
-```
-
-**Square corners (for fonts that draw the rounded ones unevenly)**
-
-```text
-┌─ 3:30 PM │ alice@laptop │ ~
-└─>
-```
+All the situations in the picture, as plain text: [docs/images/starship.txt](docs/images/starship.txt).
 
 <!-- /examples:starship -->
 
@@ -80,23 +54,13 @@ The **patched font** is what draws the arrow separators; without one they show a
 
 <!-- examples:powerline -->
 
-**Powerline look (needs a Powerline-patched font); this package shows the host name only over ssh**
+**Powerline look (needs a Powerline-patched font); this package shows the host name only over ssh**, as plain text:
 
 ```text
   3:30 PM ▶ alice ▶ ⎇ main ▶ ~ › project › src ▶
 ```
 
-**After a failed command**
-
-```text
-  3:30 PM ▶ alice ▶ ⎇ main ▶ ~ › project › src ▶ 1 ▶
-```
-
-**Over ssh from a client listed with --plain-from: glyph-free theme, and the host name shows**
-
-```text
- ⌚  3:30 PM ▌ ⌂ webserver ▌ alice ▌ ⎇ main ▌ ~ │ project │ src ▌
-```
+All the situations in the picture, as plain text: [docs/images/powerline.txt](docs/images/powerline.txt).
 
 <!-- /examples:powerline -->
 
@@ -104,23 +68,13 @@ The **patched font** is what draws the arrow separators; without one they show a
 
 <!-- examples:powerline-shell -->
 
-**Powerline look (needs a Powerline-patched font)**
+**Powerline look (needs a Powerline-patched font)**, as plain text:
 
 ```text
  03:30 PM ▶ alice ▶ laptop ▶ ~ ▶ project › src ▶ main ▶ 2⬆ ▶ ✎ ▶ ? ▶ $ ▶
 ```
 
-**After a failed command (exit code segment)**
-
-```text
- 03:30 PM ▶ alice ▶ laptop ▶ ~ ▶ project › src ▶ main ▶ 2⬆ ▶ ✎ ▶ ? ▶ $ ▶ 1 ▶
-```
-
-**Plain mode, for an ssh client listed with --plain-from**
-
-```text
- 03:30 PM ▶ alice ▶ webserver ▶ ~ ▶ project ❯ src ▶ main ▶ 2⬆ ▶ ✎ ▶ ? ▶ $ ▶
-```
+All the situations in the picture, as plain text: [docs/images/powerline-shell.txt](docs/images/powerline-shell.txt).
 
 <!-- /examples:powerline-shell -->
 
