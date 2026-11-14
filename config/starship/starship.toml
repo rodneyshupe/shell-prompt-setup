@@ -7,7 +7,7 @@
 # Preview a change without opening a new shell:  starship prompt
 
 format = """
-${env_var.PROMPT_CORNER_TOP}[ ](bold blue)${env_var.PROMPT_SSH_LABEL}$time[ │ ](bold blue)$username$hostname${custom.vip}[ │ ](bold blue)$directory\
+${env_var.PROMPT_CORNER_TOP}[ ](bold blue)(${env_var.PROMPT_BLOCK_CAP_L}${env_var.PROMPT_SSH_LABEL}${env_var.PROMPT_BLOCK_CAP_R}[ ](bold blue))$time[ │ ](bold blue)$username$hostname${custom.vip}[ │ ](bold blue)$directory\
 ([ │ ](bold blue)$git_branch$git_status${custom.gitsync})$cmd_duration$status $all\
 ${env_var.PROMPT_CORNER_BOTTOM}$character"""
 
@@ -25,7 +25,17 @@ format = "[$env_value](bold blue)"
 # prompt.sh also switches to starship-ssh.toml, generated from this file by install.sh with the blue frame
 # replaced by orange.)
 [env_var.PROMPT_SSH_LABEL]
-format = "[ $env_value ](bold fg:16 bg:208) "   # fg:16 = true black; plain `black` is drawn dark grey by many terminals when bold
+format = "[ $env_value ](bold fg:16 bg:208)"   # fg:16 = true black; plain `black` is drawn dark grey by many terminals when bold
+
+# Rounded ends for the ssh block (opt-in: install.sh --round-block, which sets PROMPT_ROUND_BLOCK=1). prompt.sh then sets
+# these two to the half circles ◖ and ◗ (plain Unicode, no patched font), in orange on the normal background, so the
+# block reads as a pill. Not set for a client listed in PROMPT_SQUARE_FROM (its font is the reason for square corners).
+# The whole group is in parentheses in `format`, so it is hidden unless one of them is set.
+[env_var.PROMPT_BLOCK_CAP_L]
+format = "[$env_value](fg:208)"
+
+[env_var.PROMPT_BLOCK_CAP_R]
+format = "[$env_value](fg:208)"
 
 [character]
 success_symbol = "[>](bold green)"

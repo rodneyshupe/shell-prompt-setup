@@ -25,7 +25,7 @@ grep -q "dry-run" /tmp/dry.out || fail "no dry-run output"
 command -v starship >/dev/null && fail "dry run installed starship"
 
 step "2. bash user, default: prompt only, in .bashrc, zsh not installed"
-$INSTALL --users bob --vip 10.0.0.10 --square-from 10.9.9.9 --ssh-agent || fail "install for bob failed"
+$INSTALL --users bob --vip 10.0.0.10 --square-from 10.9.9.9 --ssh-agent --round-block || fail "install for bob failed"
 command -v starship >/dev/null || fail "starship not installed"
 command -v zsh >/dev/null && fail "zsh was installed for a bash-only user"
 D=/home/bob/.config/shell-prompt-setup
@@ -35,6 +35,7 @@ grep -q 'shell-prompt-setup: prompt >>>' /home/bob/.bashrc || fail "no prompt bl
 grep -q 'shell-prompt-setup: agent >>>' /home/bob/.bashrc || fail "no agent block in .bashrc"
 [ ! -e /home/bob/.zshrc ] || fail ".zshrc created for a bash user"
 grep -q "PROMPT_VIP=10.0.0.10" $D/settings.sh && grep -q 'PROMPT_SQUARE_FROM="10.9.9.9"' $D/settings.sh || fail "settings.sh content"
+grep -q "PROMPT_ROUND_BLOCK=1" $D/settings.sh || fail "--round-block not written to settings.sh"
 [ "$(stat -c %U $D/prompt.sh)" = bob ] || fail "owner of installed files"
 head -5 /home/bob/.bashrc | grep -q '^# ~/.bashrc' || fail "the original .bashrc content was not kept"
 ls /home/bob/.bashrc.bak.* >/dev/null 2>&1 || fail "no backup of .bashrc"
@@ -53,7 +54,7 @@ su bob -c "zsh -i -c 'echo \$ZSH_AUTOSUGGEST_STRATEGY'" 2>&1 | grep -q 'history 
 usermod -s /usr/bin/zsh zed; usermod -s /usr/bin/zsh pat; usermod -s /usr/bin/zsh lou
 
 step "4. zsh user, default: prompt + zsh setup"
-$INSTALL --users zed --vip 10.0.0.10 --square-from 10.9.9.9 || fail "install for zed failed"
+$INSTALL --users zed --vip 10.0.0.10 --square-from 10.9.9.9 --round-block || fail "install for zed failed"
 Z=/home/zed/.config/shell-prompt-setup
 [ -s $Z/zsh-setup.zsh ] && [ -s $Z/prompt.sh ] || fail "zed files"
 grep -q 'shell-prompt-setup: zsh-setup >>>' /home/zed/.zshrc || fail "zed zsh-setup block"
@@ -72,6 +73,8 @@ ls /home/pat/.zshrc.bak.* >/dev/null 2>&1 || fail "no backup of pat's .zshrc"
 o=$(su pat -c "zsh -i -c 'echo S=\${STARSHIP_SHELL},P=\${ZSH_AUTOSUGGEST_STRATEGY},V=\${PAT_VAR}; whence -w hello'" 2>&1 | tr '\n' ' ')
 echo "$o" | grep -q 'S=zsh,P=,V=kept' || fail "pat: expected starship on, plugins off, own settings kept: $o"
 echo "$o" | grep -q 'hello: alias' || fail "pat's alias not active"
+o=$(su pat -c "env SSH_CONNECTION='10.1.1.1 5 10.0.0.1 22' zsh -i -c 'starship prompt'" 2>&1 | sed 's/%{[^}]*}//g;s/\x1b\[[0-9;]*m//g')
+echo "$o" | grep -q ' ssh ' && ! echo "$o" | grep -q '◖' || fail "without --round-block the ssh block must stay square: $o"
 
 step "6. old whole-file layout is migrated (zshrc, zprofile, starship tomls, .zshrc.local block)"
 L=/home/lou; mkdir -p $L/.config
@@ -230,6 +233,14 @@ checks() {
   echo "$r" | grep -a -q "1;34m$H" || fail "$sh: local host name not the frame blue"
   echo "$r" | grep -a -q '38;5;208' && fail "$sh: orange locally"
   echo "$r" | grep -a -q "36m$u" || fail "$sh: user name not cyan"
+
+  step "$sh: rounded ssh block (opt-in, installed with --round-block): half circles, but not for a listed client or locally"
+  p=$(txt $u $sh "$SSHENV" | head -1);                                    echo "$p" | grep -q '◖ ssh ◗' || fail "$sh: no rounded ends on the ssh block: $p"
+  p=$(txt $u $sh "$SSHENV LC_PROMPT_HOPS=3" | head -1);                   echo "$p" | grep -q '◖ ssh3 ◗' || fail "$sh: ssh3 block not rounded: $p"
+  r=$(raw $u $sh "$SSHENV");                                              echo "$r" | grep -a -q '38;5;208m◖' && echo "$r" | grep -a -q '38;5;208m◗' || fail "$sh: the caps are not orange"
+  p=$(txt $u $sh "SSH_CONNECTION='10.9.9.9 5 10.0.0.1 22'" | head -1);    echo "$p" | grep -q '◖' && fail "$sh: a listed (square) client got rounded ends: $p"
+  p=$(txt $u $sh "$SSHENV PROMPT_CORNERS=square" | head -1);              echo "$p" | grep -q '◖' && fail "$sh: PROMPT_CORNERS=square still rounded the block: $p"
+  p=$(txt $u $sh "-u SSH_CONNECTION" | head -1);                          echo "$p" | grep -q '◖\|◗' && fail "$sh: caps shown locally: $p"
 
   step "$sh: hop counter through a real sshd (ssh, ssh2, no counter)"
   local O="-o StrictHostKeyChecking=no -o BatchMode=yes -o LogLevel=ERROR" ext=sh

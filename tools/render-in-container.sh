@@ -35,6 +35,7 @@ star() { su alice -c "cd $1 && env $2 zsh -i -c 'starship prompt $3'" 2>/dev/nul
 # ---- Starship (real zsh, the real prompt.sh)
 star /home/alice/project/src "-u SSH_CONNECTION" "" | rec starship local "Your own machine: a git repo with changes, two commits ahead of its upstream" laptop alice
 star /home/alice "$SSH_CLIENT_ENV" "" | rec starship ssh "Over ssh: orange frame and an ssh block" webserver alice
+star /home/alice "$SSH_CLIENT_ENV PROMPT_ROUND_BLOCK=1" "" | rec starship round "Over ssh with --round-block: rounded ends from plain Unicode half circles, no patched font (drawn as shapes here; your terminal draws them with its own font)" webserver alice
 ip addr add 10.0.0.10/32 dev lo
 ( cd /opt/stacks && env SSH_CONNECTION="$LISTED_CLIENT" LC_PROMPT_HOPS=2 zsh -i -c 'starship prompt --status 1 --cmd-duration 12000' 2>/dev/null ) | rec starship root "root, second ssh hop, on the host that holds the VIP, after a slow command that failed" docker-network-1 root
 ip addr del 10.0.0.10/32 dev lo

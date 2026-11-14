@@ -415,19 +415,26 @@ EOF
 }
 
 # ---- settings (settings.sh: plain export lines read by the prompt loaders) ---------------------------
-# settings_put <settings file> <user> NAME=value...: updates only the given settings; the value is
-# written as is (quote it yourself).
+# settings_put <settings file> <user> NAME=value...: updates only the given settings, each in the place where it
+# already is (so a re-run does not reorder the file), new ones are appended; the value is written as is (quote it
+# yourself).
 settings_put() {
-  local f=$1 u=$2 tmp keys="" kv; shift 2
+  local f=$1 u=$2 tmp kv lines=""; shift 2
   [ $# -gt 0 ] || return 0
   tmp=$(mktemp "${TMPDIR:-/tmp}/sps-settings.XXXXXX")
-  for kv in "$@"; do keys="$keys ${kv%%=*}"; done
+  for kv in "$@"; do lines="$lines
+export $kv"; done
   {
     echo "# shell-prompt-setup settings: plain export lines read by the prompt loader (the installers update them)."
     if [ -f "$f" ]; then
-      awk -v keys="$keys" 'BEGIN{n=split(keys,k," ")} /^# shell-prompt-setup settings/{next} {skip=0; for(i=1;i<=n;i++) if (index($0,"export " k[i] "=")==1) skip=1; if(!skip) print}' "$f"
+      awk -v new="$lines" '
+        BEGIN { n = split(new, L, "\n"); for (i = 1; i <= n; i++) { if (L[i] == "") continue; k = L[i]; sub(/=.*/, "", k); K[k] = L[i]; order[++m] = k } }
+        /^# shell-prompt-setup settings/ { next }
+        { done = 0; for (k in K) if (index($0, k "=") == 1) { print K[k]; seen[k] = 1; done = 1; break } if (!done) print }
+        END { for (i = 1; i <= m; i++) if (!seen[order[i]]) print K[order[i]] }' "$f"
+    else
+      for kv in "$@"; do echo "export $kv"; done
     fi
-    for kv in "$@"; do echo "export $kv"; done
   } > "$tmp"
   place "$tmp" "$f" "$u" always
   rm -f "$tmp"

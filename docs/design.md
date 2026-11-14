@@ -120,6 +120,14 @@ that switches look per connection.
   The block is an `env_var.PROMPT_SSH_LABEL` module whose text `prompt.sh` computes (non-numeric values are ignored). Limits: only ssh typed in
   zsh carries the counter, and a server whose sshd doesn't accept `LC_*` shows one hop. Rejected: guessing from the client address (needs a
   list of your own machines) and a custom module that walks the process tree (a fork per prompt).
+- **Rounded ssh block (opt-in).** The block is spaces on an orange *background*, and a background is always a rectangle, so rounding it means
+  drawing a cap character at each end, in orange on the normal background. Two kinds exist: Powerline's rounded caps (U+E0B6 / U+E0B4), which are
+  private-use glyphs that need a patched font (the very thing this prompt avoids, and a blank box in a browser terminal), and the standard Unicode half
+  circles `◖` (U+25D6) and `◗` (U+25D7), which ordinary fonts carry but may draw slightly small or off the baseline. The half circles were chosen after
+  trying both in the real terminal, and the option is **opt-in** (`--round-block`, `PROMPT_ROUND_BLOCK=1`) because how they look depends on the font.
+  A client listed in `PROMPT_SQUARE_FROM` keeps the square block: its font is already the reason for square corners. Mechanically the caps are two more
+  `env_var` modules that `prompt.sh` sets only in an ssh session, and the whole group is wrapped in `( ... )` in `format` so it disappears unless one of
+  them is set. The label module therefore no longer carries its own trailing space (the group does).
 - **Ahead/behind:** Starship's `git_status` can only show a count always or never, so the counts come from a `custom.gitsync` module
   (`git rev-list --left-right --count @{upstream}...HEAD`): `>` for one ahead, `>3` for three, `<`/`<2` behind, `> <2` both. Counts show
   only above 1. It prints nothing outside a repo or without an upstream. Custom modules are off unless `when` is set (`when = true`),

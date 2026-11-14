@@ -54,6 +54,7 @@ PROMPT_PKGS_BREW="starship"
 VIP=""
 SQUARE_FROM=""
 SQUARE_LIST=""
+ROUND_BLOCK=""
 SSH_VARIANT=""
 
 installer_usage() {
@@ -65,6 +66,8 @@ Starship settings
   --square-from IP[,IP...]
                    Square corners (┌─ └─) instead of rounded for ssh sessions whose client address is
                    in the list (a browser SSH terminal whose font draws rounded ones unevenly).
+  --round-block    Rounded ends (half circles) on the ssh block, instead of a square one. Plain Unicode, no
+                   patched font; not used for clients listed with --square-from. --no-round-block turns it off.
 USAGE
 }
 
@@ -74,6 +77,8 @@ installer_option() {
     --vip=*)         VIP=${1#*=}; OPT_SHIFT=1 ;;
     --square-from)   SQUARE_FROM=${2:?--square-from needs addresses}; OPT_SHIFT=2 ;;
     --square-from=*) SQUARE_FROM=${1#*=}; OPT_SHIFT=1 ;;
+    --round-block)    ROUND_BLOCK=1; OPT_SHIFT=1 ;;
+    --no-round-block) ROUND_BLOCK=0; OPT_SHIFT=1 ;;
     *) OPT_SHIFT=0 ;;
   esac
 }
@@ -96,17 +101,17 @@ installer_global() {
 }
 
 installer_user() {
-  local u=$1 dir=$3 vip sq pairs=""
+  local u=$1 dir=$3 vip sq
   place "$SRC/starship/prompt.sh"      "$dir/prompt.sh"          "$u"
   place "$SRC/starship/starship.toml"  "$dir/starship.toml"      "$u"
   place "$SSH_VARIANT"                 "$dir/starship-ssh.toml"  "$u"
   vip=${VIP:-$M_VIP}; sq=${SQUARE_LIST:-$M_SQUARE}
-  [ -n "$vip" ] && pairs="PROMPT_VIP=$vip"
-  if [ -n "$sq" ]; then
-    settings_put "$dir/settings.sh" "$u" ${pairs:+"$pairs"} "PROMPT_SQUARE_FROM=\"$sq\""
-  elif [ -n "$pairs" ]; then
-    settings_put "$dir/settings.sh" "$u" "$pairs"
-  fi
+  set --
+  [ -n "$vip" ] && set -- "$@" "PROMPT_VIP=$vip"
+  [ -n "$sq" ] && set -- "$@" "PROMPT_SQUARE_FROM=\"$sq\""
+  [ -n "$ROUND_BLOCK" ] && set -- "$@" "PROMPT_ROUND_BLOCK=$ROUND_BLOCK"
+  [ $# -gt 0 ] && settings_put "$dir/settings.sh" "$u" "$@"
+  return 0
 }
 
 installer_body() {

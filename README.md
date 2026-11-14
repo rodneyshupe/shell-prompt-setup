@@ -36,7 +36,7 @@ Reading line 1, left to right:
 | Part | Meaning |
 |---|---|
 | `╭─` ... `╰─>` | The frame. Blue on your own machine, **orange** in an ssh session. `┌─ └─` (square) where a font draws the rounded corners unevenly. |
-| `ssh` / `ssh2` / `ssh3` | Only in an ssh session: a black-on-orange block. `ssh2` means you ssh'd again from an ssh session. |
+| `ssh` / `ssh2` / `ssh3` | Only in an ssh session: a black-on-orange block. `ssh2` means you ssh'd again from an ssh session. With `--round-block` its ends are rounded (`◖ ssh ◗`). |
 | `3:30 PM` | The clock. |
 | `alice@laptop` | User (cyan; **azure for root**) and host (the frame color: blue locally, orange over ssh). |
 | `[VIP]` | This host currently holds a floating address you configured (keepalived and the like). |
@@ -144,7 +144,7 @@ The Starship prompt needs nothing. Powerline needs a Powerline-patched font **in
 
 ### 5. Tune, switch, undo
 
-- **Per-machine settings** live in `~/.config/shell-prompt-setup/settings.sh`: `--vip ADDRESS` (the `[VIP]` marker), `--square-from IP[,IP]` (square corners
+- **Per-machine settings** live in `~/.config/shell-prompt-setup/settings.sh`: `--vip ADDRESS` (the `[VIP]` marker), `--round-block` (rounded ends on the ssh block), `--square-from IP[,IP]` (square corners
   for those ssh clients), `--plain-from IP[,IP]` (glyph-free Powerline), or set `PROMPT_CORNERS=square` / `PROMPT_PLAIN=1` there for everywhere.
 - **Switch prompts** by running the other installer: both write the same single block in `~/.zshrc` / `~/.bashrc`, so you never get two prompts.
 - **Update** by re-running the installer. Files you edited in `~/.config/shell-prompt-setup/` are kept and reported; add `--force` to replace them (a backup is kept).
@@ -188,6 +188,7 @@ Only `install.sh` (Starship):
 |---|---|
 | `--vip ADDRESS` | Show a bold yellow `[VIP]` after the host name while this host holds `ADDRESS` (keepalived, HA pairs). |
 | `--square-from IP[,IP...]` | Square corners (`┌─ └─`) instead of rounded for ssh sessions whose client address is in the list. |
+| `--round-block` | Rounded ends (the half circles `◖` `◗`, plain Unicode, no patched font) on the ssh block instead of a square one. Not used for clients listed with `--square-from`. `--no-round-block` turns it off again. Written to `settings.sh` as `PROMPT_ROUND_BLOCK=1`. |
 
 Only `install-powerline.sh`:
 

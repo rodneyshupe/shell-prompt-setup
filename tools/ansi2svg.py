@@ -112,6 +112,7 @@ def runs(cells):
 # Box-drawing characters are drawn as lines that span the whole cell, the way a terminal draws them, so the
 # strokes of two rows meet (a font glyph stops short of the cell edge and leaves a gap).
 BOX = {chr(c) for c in (0x2500, 0x2502, 0x250c, 0x2510, 0x2514, 0x2518, 0x256d, 0x256e, 0x256f, 0x2570)}
+HALF = {chr(0x25d6), chr(0x25d7)}       # half circles used as rounded block ends: drawn as shapes, whatever the font
 
 
 def box_shape(ch, x, y, color):
@@ -146,6 +147,15 @@ def draw_line(cells, y):
         i = 0
         while i < len(text):
             ch = text[i]
+            if ch in HALF:
+                gx, rad = x + i * CW, (LH - 4) / 2
+                if ch == chr(0x25d6):               # left half disc, flat edge on the right
+                    d = "M%.2f %.2f A%.2f %.2f 0 0 0 %.2f %.2f Z" % (gx + CW, y + 2, rad, rad, gx + CW, y + LH - 2)
+                else:                               # right half disc, flat edge on the left
+                    d = "M%.2f %.2f A%.2f %.2f 0 0 1 %.2f %.2f Z" % (gx, y + 2, rad, rad, gx, y + LH - 2)
+                frag.append('<path d="%s" fill="%s"/>' % (d, fg or FG_DEFAULT))
+                i += 1
+                continue
             if ch in BOX:
                 frag.append(box_shape(ch, x + i * CW, y, fg or FG_DEFAULT))
                 i += 1
@@ -164,7 +174,7 @@ def draw_line(cells, y):
                 i += 1
                 continue
             j = i
-            while j < len(text) and text[j] not in PL_PLAIN and text[j] not in BOX:
+            while j < len(text) and text[j] not in PL_PLAIN and text[j] not in BOX and text[j] not in HALF:
                 j += 1
             seg = text[i:j]
             if seg.strip():

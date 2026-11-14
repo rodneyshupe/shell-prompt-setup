@@ -6,7 +6,7 @@
 #     (PROMPT_CORNERS=square, or an ssh client whose address is in PROMPT_SQUARE_FROM),
 #   - in an ssh session switches to the orange variant of the config and labels the session
 #     ssh, ssh2, ssh3, ... by hop count (an ssh() function below sends the count as LC_PROMPT_HOPS),
-#   - reads per-machine settings (PROMPT_VIP, PROMPT_SQUARE_FROM, ...) from settings.sh.
+#   - reads per-machine settings (PROMPT_VIP, PROMPT_SQUARE_FROM, PROMPT_ROUND_BLOCK, ...) from settings.sh.
 # Files live in ~/.config/shell-prompt-setup/ (override with SHELL_PROMPT_SETUP_DIR).
 
 # Interactive shells only (bash reads ~/.bashrc for `ssh host command` on some systems).
@@ -39,9 +39,16 @@ if [ -n "${SSH_CONNECTION:-}" ]; then
   esac
   if [ "$PROMPT_HOPS" -gt 1 ]; then PROMPT_SSH_LABEL=ssh$PROMPT_HOPS; else PROMPT_SSH_LABEL=ssh; fi
   export PROMPT_HOPS PROMPT_SSH_LABEL
+  # Rounded ends for the ssh block: opt in with PROMPT_ROUND_BLOCK=1 (settings.sh, install.sh --round-block). Not for
+  # a client that already gets square corners, because that is a font that draws rounded shapes badly.
+  if [ "${PROMPT_ROUND_BLOCK:-}" = 1 ] && [ -z "$_sps_square" ]; then
+    export PROMPT_BLOCK_CAP_L='◖' PROMPT_BLOCK_CAP_R='◗'
+  else
+    unset PROMPT_BLOCK_CAP_L PROMPT_BLOCK_CAP_R
+  fi
   [ -r "$_sps_dir/starship-ssh.toml" ] && _sps_config=$_sps_dir/starship-ssh.toml
 else
-  unset PROMPT_HOPS PROMPT_SSH_LABEL
+  unset PROMPT_HOPS PROMPT_SSH_LABEL PROMPT_BLOCK_CAP_L PROMPT_BLOCK_CAP_R
 fi
 [ -r "$_sps_config" ] && export STARSHIP_CONFIG="$_sps_config"
 
