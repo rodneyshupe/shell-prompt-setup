@@ -25,7 +25,7 @@ zstyle ':completion:*' menu select
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 
 # Colors for ls and completion. GNU dircolors/ls (Linux, or coreutils on macOS) if present,
-# otherwise BSD ls colors (macOS).
+# then any ls that takes --color=auto (BusyBox on Alpine), otherwise BSD ls colors (macOS).
 if (( $+commands[dircolors] )); then _dircolors=dircolors; _gnuls=ls
 elif (( $+commands[gdircolors] )); then _dircolors=gdircolors; _gnuls=gls
 fi
@@ -35,6 +35,10 @@ if [[ -n $_dircolors ]]; then
   alias ls="$_gnuls --color=auto"
   alias ll="$_gnuls --color=auto -l"
   alias l="$_gnuls --color=auto -lA"
+elif ls --color=auto -d . >/dev/null 2>&1; then
+  alias ls='ls --color=auto'
+  alias ll='ls --color=auto -l'
+  alias l='ls --color=auto -lA'
 else
   export CLICOLOR=1
   alias ls='ls -G'

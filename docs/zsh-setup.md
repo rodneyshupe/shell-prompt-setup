@@ -11,8 +11,8 @@ default `install.sh` for a zsh user, leave it out with `--prompt-only`, or add i
 3. **Completion:** `compinit`, an arrow-key menu (`menu select`), case-insensitive matching, then fragment matching
    (`docker-comp<Tab>` → `docker-compose.yaml`) through `matcher-list`. Zsh already expands partial path segments (`/u/l/b<Tab>` →
    `/usr/local/bin`) by default.
-4. **Colors for `ls` and completion:** GNU `dircolors`/`ls` if present (Linux, or coreutils on macOS as `gdircolors`/`gls`), otherwise
-   `CLICOLOR` and BSD `ls -G`. Aliases `ls`, `ll`, `l`.
+4. **Colors for `ls` and completion:** GNU `dircolors`/`ls` if present (Linux, or coreutils on macOS as `gdircolors`/`gls`), then any `ls`
+   that accepts `--color=auto` (BusyBox on Alpine), otherwise `CLICOLOR` and BSD `ls -G`. Aliases `ls`, `ll`, `l`.
 5. **Key bindings:** emacs mode; Up/Down search history for what is already typed (`up-line-or-beginning-search`).
 6. **`~/.local/bin` on `PATH`.**
 7. **`~/.zshrc.local`**, if it exists: yours, sourced here and never touched by the installer.
