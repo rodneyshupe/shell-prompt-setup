@@ -343,8 +343,20 @@ $INSTALL --users root --shells both >/dev/null || fail "root install failed"
 for sh in bash zsh; do
   r=$(cd /root && env -u SSH_CONNECTION $sh -i -c 'starship prompt; true' 2>&1 | unwrap)
   echo "$r" | grep -a -q "38;5;207mroot" || fail "$sh: root user name not magenta"
-  echo "$r" | grep -a -q '1;31m' && fail "$sh: red left in the root prompt"
+  echo "$r" | grep -a -q '1;31m' && fail "$sh: red left in the root prompt: $(echo "$r" | cat -v | head -5)"
 done
+
+step "admin-group member: gold user name (docker counts), cyan again outside the groups, PROMPT_PRIV_GROUPS overrides"
+groupadd -f docker; usermod -aG docker bob
+for sh in bash zsh; do
+  r=$(raw bob $sh "-u SSH_CONNECTION")
+  echo "$r" | grep -a -q "38;5;178mbob" || fail "$sh: docker member not gold"
+  r=$(raw bob $sh "-u SSH_CONNECTION PROMPT_PRIV_GROUPS=wheel")
+  echo "$r" | grep -a -q "36mbob" || fail "$sh: PROMPT_PRIV_GROUPS override ignored"
+done
+r=$(raw zed zsh "-u SSH_CONNECTION")
+echo "$r" | grep -a -q "36mzed" || fail "zsh: user outside the groups not cyan"
+gpasswd -d bob docker >/dev/null
 
 step "11. --uninstall removes only what the installer added"
 $INSTALL --users pat --uninstall >/dev/null || fail "uninstall failed"

@@ -6,6 +6,7 @@
 #     (PROMPT_CORNERS=square, or an ssh client whose address is in PROMPT_SQUARE_FROM),
 #   - in an ssh session switches to the orange variant of the config and labels the session
 #     ssh, ssh2, ssh3, ... by hop count (an ssh() function below sends the count as LC_PROMPT_HOPS),
+#   - colors the user name by access: root magenta, admin-group member gold, others cyan,
 #   - reads per-machine settings (PROMPT_VIP, PROMPT_SQUARE_FROM, PROMPT_ROUND_BLOCK, ...) from settings.sh.
 # Files live in ~/.config/shell-prompt-setup/ (override with SHELL_PROMPT_SETUP_DIR).
 
@@ -16,6 +17,21 @@ _sps_dir=${SHELL_PROMPT_SETUP_DIR:-$HOME/.config/shell-prompt-setup}
 
 # Per-machine settings written by install.sh (--vip, --square-from): plain `export NAME=value` lines.
 [ -r "$_sps_dir/settings.sh" ] && . "$_sps_dir/settings.sh"
+
+# User name color by access level, worked out once per shell (not per prompt): root (uid 0) magenta, a member of an
+# admin group gold, anyone else cyan. The groups are PROMPT_PRIV_GROUPS (settings.sh), default: sudo wheel admin docker
+# (docker counts because it is root-equivalent). starship.toml shows whichever of the three variables is set.
+unset PROMPT_USER_ROOT PROMPT_USER_PRIV PROMPT_USER_PLAIN
+_sps_user=$(id -un 2>/dev/null || echo "${USER:-?}")
+if [ "$(id -u 2>/dev/null)" = 0 ]; then
+  export PROMPT_USER_ROOT=$_sps_user
+else
+  _sps_priv=
+  for _sps_g in $(id -Gn 2>/dev/null); do
+    case " ${PROMPT_PRIV_GROUPS:-sudo wheel admin docker} " in *" $_sps_g "*) _sps_priv=1 ;; esac
+  done
+  if [ -n "$_sps_priv" ]; then export PROMPT_USER_PRIV=$_sps_user; else export PROMPT_USER_PLAIN=$_sps_user; fi
+fi
 
 # Corners: rounded by default (starship.toml's env_var defaults); square when asked for.
 _sps_square=
@@ -77,4 +93,4 @@ if command -v starship >/dev/null 2>&1; then
   fi
 fi
 
-unset _sps_dir _sps_square _sps_config _sps_cap
+unset _sps_dir _sps_square _sps_config _sps_cap _sps_user _sps_priv _sps_g

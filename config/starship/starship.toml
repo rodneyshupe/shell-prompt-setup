@@ -7,7 +7,7 @@
 # Preview a change without opening a new shell:  starship prompt
 
 format = """
-${env_var.PROMPT_CORNER_TOP}[ ](bold 34)(${env_var.PROMPT_BLOCK_CAP_L}${env_var.PROMPT_SSH_LABEL}${env_var.PROMPT_BLOCK_CAP_R}[ ](bold 34))$time[ │ ](bold 34)$username$hostname( ${custom.vipcapl}${custom.vip}${custom.vipcapr})[ │ ](bold 34)$directory\
+${env_var.PROMPT_CORNER_TOP}[ ](bold 34)(${env_var.PROMPT_BLOCK_CAP_L}${env_var.PROMPT_SSH_LABEL}${env_var.PROMPT_BLOCK_CAP_R}[ ](bold 34))$time[ │ ](bold 34)${env_var.PROMPT_USER_ROOT}${env_var.PROMPT_USER_PRIV}${env_var.PROMPT_USER_PLAIN}$hostname( ${custom.vipcapl}${custom.vip}${custom.vipcapr})[ │ ](bold 34)$directory\
 ([ │ ](bold 34)$git_branch$git_status${custom.gitsync})$cmd_duration$status $all\
 ${env_var.PROMPT_CORNER_BOTTOM}$character"""
 
@@ -48,11 +48,24 @@ time_format = "%-I:%M %p"
 style = "white"
 format = "[$time]($style)"
 
+# The user name is colored by the kind of access, not just uid 0. prompt.sh works the level out once when the
+# shell starts and sets exactly one of these three variables to the user name:
+#   root    uid 0                                                              magenta (207)
+#   priv    in a group that gives admin rights (PROMPT_PRIV_GROUPS: sudo wheel admin docker)   gold (178)
+#   plain   everyone else                                                      cyan
+# 207 and 178 are distinct from the cyan, the green frame (34) and the orange ssh frame (208).
+# Starship's own username module is off: `$all` would otherwise print it a second time.
 [username]
-show_always = true
-style_user = "bold cyan"
-style_root = "bold 207"   # magenta: distinct from the cyan user color, the green frame and the orange ssh frame
-format = "[$user]($style)"
+disabled = true
+
+[env_var.PROMPT_USER_ROOT]
+format = "[$env_value](bold 207)"
+
+[env_var.PROMPT_USER_PRIV]
+format = "[$env_value](bold 178)"
+
+[env_var.PROMPT_USER_PLAIN]
+format = "[$env_value](bold cyan)"
 
 [hostname]
 ssh_only = false
