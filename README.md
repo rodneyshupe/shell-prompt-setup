@@ -35,10 +35,10 @@ Reading line 1, left to right:
 
 | Part | Meaning |
 |---|---|
-| `╭─` ... `╰─>` | The frame. Blue on your own machine, **orange** in an ssh session. `┌─ └─` (square) where a font draws the rounded corners unevenly. |
+| `╭─` ... `╰─>` | The frame. Green on your own machine, **orange** in an ssh session. `┌─ └─` (square) where a font draws the rounded corners unevenly. |
 | `ssh` / `ssh2` / `ssh3` | Only in an ssh session: a black-on-orange block. `ssh2` means you ssh'd again from an ssh session. With `--round-block` its ends are rounded (`◖ ssh ◗`, or full-height with `--round-block powerline`). |
 | `3:30 PM` | The clock. |
-| `alice@laptop` | User (cyan; **azure for root**) and host (the frame color: blue locally, orange over ssh). |
+| `alice@laptop` | User (cyan; **magenta for root**) and host (the frame color: green locally, orange over ssh). |
 | `VIP` | A green block: this host currently holds a floating address you configured (keepalived and the like). Rounded the same way as the `ssh` block with `--round-block`. |
 | `project/src` | Folder, up to 6 levels, `…/` when shortened. |
 | `git main !? >2` | Branch; `!` modified, `+` staged, `?` untracked, `x` deleted, `$` stash, `=` conflicts; `>2` two commits ahead of the upstream, `<3` three behind, `> <3` both. A count shows only above 1. |
@@ -189,6 +189,7 @@ Only `install.sh` (Starship):
 | `--vip ADDRESS` | Show a green `VIP` block after the host name while this host holds `ADDRESS` (keepalived, HA pairs). It rounds the same way as the `ssh` block (`--round-block`), and stays square for `--square-from` clients. |
 | `--square-from IP[,IP...]` | Square corners (`┌─ └─`) instead of rounded for ssh sessions whose client address is in the list. |
 | `--round-block [halfcircle\|powerline]` | Rounded ends on the ssh block instead of a square one. `halfcircle` (the default) is plain Unicode `◖ ◗`, no patched font, but only about cap height. `powerline` is full height, a real rounded rectangle, but needs the Powerline rounded caps (U+E0B6/E0B4): a Nerd Font or "Powerline Extra Symbols" font, or a terminal that draws them itself. The classic Powerline-patched fonts only have the four arrow glyphs, not these. Not used for clients listed with `--square-from`. `--no-round-block` turns it off. Written to `settings.sh` as `PROMPT_ROUND_BLOCK`. |
+| `--frame-color N` | Color of the frame, separators, host name and prompt character: an xterm-256 number, default `34` (green; `4` is the old blue). Baked into `starship.toml` (not `settings.sh`), so changing it on a machine that already has the file needs `--force`. The ssh variant stays orange. |
 
 Only `install-powerline.sh`:
 
@@ -208,7 +209,7 @@ Per user, in `~/.config/shell-prompt-setup/` (all of it removed by `--uninstall`
 
 | File | |
 |---|---|
-| `prompt.sh`, `starship.toml`, `starship-ssh.toml` | The Starship prompt. `starship-ssh.toml` is generated from `starship.toml` (every blue replaced by orange) and used in ssh sessions. |
+| `prompt.sh`, `starship.toml`, `starship-ssh.toml` | The Starship prompt. `starship-ssh.toml` is generated from `starship.toml` (the frame color replaced by orange) and used in ssh sessions. |
 | `powerline.sh`, `powerline/` | The Powerline prompt, `powerline` package backend: a small overlay on the package's config (clock first, left-only theme). |
 | `powerline-shell.sh`, `powerline-shell-patched/`, `powerline-shell-plain/`, `venv/` | The Powerline prompt, powerline-shell backend, in a private virtualenv. |
 | `settings.sh` | Only with `--vip`, `--square-from` or `--plain-from`. |

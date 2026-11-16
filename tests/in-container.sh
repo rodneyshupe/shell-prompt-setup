@@ -264,9 +264,9 @@ checks() {
   r=$(raw $u $sh "$SSHENV")
   echo "$r" | grep -a -q '38;5;208' && echo "$r" | grep -a -q '48;5;208;38;5;16' || fail "$sh: ssh block not black on orange"
   echo "$r" | grep -a -q "38;5;208m$H" || fail "$sh: host name not orange over ssh"
-  echo "$r" | grep -a -q '1;34m' && fail "$sh: blue left over ssh"
+  echo "$r" | grep -a -q '38;5;34m' && fail "$sh: green left over ssh"
   r=$(raw $u $sh "-u SSH_CONNECTION")
-  echo "$r" | grep -a -q "1;34m$H" || fail "$sh: local host name not the frame blue"
+  echo "$r" | grep -a -q "38;5;34m$H" || fail "$sh: local host name not the frame green"
   echo "$r" | grep -a -q '38;5;208' && fail "$sh: orange locally"
   echo "$r" | grep -a -q "36m$u" || fail "$sh: user name not cyan"
 
@@ -338,11 +338,11 @@ done
 checks bob bash
 checks zed zsh
 
-step "root: azure user name in both shells (not red)"
+step "root: magenta user name in both shells (not red)"
 $INSTALL --users root --shells both >/dev/null || fail "root install failed"
 for sh in bash zsh; do
   r=$(cd /root && env -u SSH_CONNECTION $sh -i -c 'starship prompt; true' 2>&1 | unwrap)
-  echo "$r" | grep -a -q "38;5;39mroot" || fail "$sh: root user name not azure"
+  echo "$r" | grep -a -q "38;5;207mroot" || fail "$sh: root user name not magenta"
   echo "$r" | grep -a -q '1;31m' && fail "$sh: red left in the root prompt"
 done
 

@@ -7,22 +7,22 @@
 # Preview a change without opening a new shell:  starship prompt
 
 format = """
-${env_var.PROMPT_CORNER_TOP}[ ](bold blue)(${env_var.PROMPT_BLOCK_CAP_L}${env_var.PROMPT_SSH_LABEL}${env_var.PROMPT_BLOCK_CAP_R}[ ](bold blue))$time[ │ ](bold blue)$username$hostname( ${custom.vipcapl}${custom.vip}${custom.vipcapr})[ │ ](bold blue)$directory\
-([ │ ](bold blue)$git_branch$git_status${custom.gitsync})$cmd_duration$status $all\
+${env_var.PROMPT_CORNER_TOP}[ ](bold 34)(${env_var.PROMPT_BLOCK_CAP_L}${env_var.PROMPT_SSH_LABEL}${env_var.PROMPT_BLOCK_CAP_R}[ ](bold 34))$time[ │ ](bold 34)$username$hostname( ${custom.vipcapl}${custom.vip}${custom.vipcapr})[ │ ](bold 34)$directory\
+([ │ ](bold 34)$git_branch$git_status${custom.gitsync})$cmd_duration$status $all\
 ${env_var.PROMPT_CORNER_BOTTOM}$character"""
 
 # Corner characters: the env var wins, the default is rounded.
 [env_var.PROMPT_CORNER_TOP]
 default = "╭─"
-format = "[$env_value](bold blue)"
+format = "[$env_value](bold 34)"
 
 [env_var.PROMPT_CORNER_BOTTOM]
 default = "╰─"
-format = "[$env_value](bold blue)"
+format = "[$env_value](bold 34)"
 
 # Shown only in an ssh session: tells a remote host from the local machine. prompt.sh sets PROMPT_SSH_LABEL
 # to `ssh` (one hop), `ssh2` (ssh from an ssh session), `ssh3`, ... (208 = orange. In an ssh session
-# prompt.sh also switches to starship-ssh.toml, generated from this file by install.sh with the blue frame
+# prompt.sh also switches to starship-ssh.toml, generated from this file by install.sh with the green frame
 # replaced by orange.)
 [env_var.PROMPT_SSH_LABEL]
 format = "[ $env_value ](bold fg:16 bg:208)"   # fg:16 = true black; plain `black` is drawn dark grey by many terminals when bold
@@ -38,9 +38,9 @@ format = "[$env_value](fg:208)"
 format = "[$env_value](fg:208)"
 
 [character]
-success_symbol = "[>](bold green)"
+success_symbol = "[>](bold 34)"
 error_symbol = "[>](bold red)"
-vimcmd_symbol = "[<](bold green)"
+vimcmd_symbol = "[<](bold 34)"
 
 [time]
 disabled = false
@@ -51,13 +51,13 @@ format = "[$time]($style)"
 [username]
 show_always = true
 style_user = "bold cyan"
-style_root = "bold 39"   # azure: the complement of the orange frame (red was too close to it)
+style_root = "bold 207"   # magenta: distinct from the cyan user color, the green frame and the orange ssh frame
 format = "[$user]($style)"
 
 [hostname]
 ssh_only = false
 ssh_symbol = ""
-style = "bold blue"   # same as the frame; starship-ssh.toml turns it (and the frame) orange in an ssh session
+style = "bold 34"   # same as the frame; starship-ssh.toml turns it (and the frame) orange in an ssh session
 format = "[@](white)[$hostname]($style)"
 
 [directory]
@@ -79,13 +79,13 @@ deleted = "x"
 # Shown only for commands that run longer than 2 seconds
 [cmd_duration]
 style = "yellow"
-format = "[ │ ](bold blue)[took $duration]($style)"
+format = "[ │ ](bold 34)[took $duration]($style)"
 
 # Shown only when the last command failed
 [status]
 disabled = false
 style = "bold red"
-format = "[ │ ](bold blue)[exit $status( $common_meaning)( $signal_name)]($style)"
+format = "[ │ ](bold 34)[exit $status( $common_meaning)( $signal_name)]($style)"
 
 [container]
 disabled = true

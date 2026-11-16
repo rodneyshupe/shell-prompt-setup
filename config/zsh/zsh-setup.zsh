@@ -41,6 +41,9 @@ elif ls --color=auto -d . >/dev/null 2>&1; then
   alias l='ls --color=auto -lA'
 else
   export CLICOLOR=1
+  # BSD ls: bold blue directories like GNU ls (the default is plain dark blue, hard to read on black).
+  # Order: dir, symlink, socket, pipe, exec, block, char, setuid, setgid, sticky-w, dir-w. Set LSCOLORS earlier to override.
+  : ${LSCOLORS:=ExFxCxDxBxegedabagacad}; export LSCOLORS
   alias ls='ls -G'
   alias ll='ls -G -l'
   alias l='ls -G -lA'

@@ -55,6 +55,8 @@ VIP=""
 SQUARE_FROM=""
 SQUARE_LIST=""
 ROUND_BLOCK=""
+FRAME_COLOR=""
+MAIN_TOML=""
 SSH_VARIANT=""
 
 installer_usage() {
@@ -71,6 +73,8 @@ Starship settings
                    Unicode, no patched font, but only about cap height. powerline is full height, a real
                    rounded rectangle, but needs a Powerline-patched font (or a terminal that draws Powerline
                    glyphs itself). Not used for clients listed with --square-from. --no-round-block turns it off.
+  --frame-color N  Color of the frame, separators, host name and prompt character, an xterm-256 number
+                   (default 34, green; 4 or 12 = the old blue). The ssh variant stays orange.
 USAGE
 }
 
@@ -89,6 +93,8 @@ installer_option() {
       ROUND_BLOCK=${1#*=}; OPT_SHIFT=1
       case "$ROUND_BLOCK" in powerline|halfcircle) ;; *) die "--round-block style must be halfcircle or powerline, got '$ROUND_BLOCK'" ;; esac ;;
     --no-round-block) ROUND_BLOCK=0; OPT_SHIFT=1 ;;
+    --frame-color)   FRAME_COLOR=${2:?--frame-color needs a color number}; OPT_SHIFT=2 ;;
+    --frame-color=*) FRAME_COLOR=${1#*=}; OPT_SHIFT=1 ;;
     *) OPT_SHIFT=0 ;;
   esac
 }
@@ -97,23 +103,30 @@ installer_check() {
   if [ -n "$VIP" ]; then
     case "$VIP" in *[!0-9.]*|"") die "--vip must be an IPv4 address, got '$VIP'" ;; esac
   fi
+  if [ -n "$FRAME_COLOR" ]; then
+    case "$FRAME_COLOR" in *[!0-9]*|"") die "--frame-color must be a color number 0-255, got '$FRAME_COLOR'" ;; esac
+    [ "$FRAME_COLOR" -le 255 ] || die "--frame-color must be a color number 0-255, got '$FRAME_COLOR'"
+  fi
   if [ -n "$SQUARE_FROM" ]; then
     case "$SQUARE_FROM" in *[!0-9.:,a-fA-F]*|"") die "--square-from must be a comma-separated list of IP addresses, got '$SQUARE_FROM'" ;; esac
     SQUARE_LIST=$(printf '%s' "$SQUARE_FROM" | tr ',' ' ')
   fi
 }
 
-# Orange variant of starship.toml for ssh sessions (the blue frame and host name -> orange), generated
-# into a temp file so the source tree is never written to.
+# The source starship.toml uses `bold 34` (green) for the frame, separators, host name and prompt
+# character. Generated into temp files so the source tree is never written to: the local file with
+# --frame-color applied (the same as the source by default) and the orange variant for ssh sessions.
 installer_global() {
+  MAIN_TOML=$(mktemp "${TMPDIR:-/tmp}/starship.XXXXXX") || die "cannot create a temp file"
   SSH_VARIANT=$(mktemp "${TMPDIR:-/tmp}/starship-ssh.XXXXXX") || die "cannot create a temp file"
-  sed 's/bold blue/bold 208/g' "$SRC/starship/starship.toml" > "$SSH_VARIANT"
+  sed "s/bold 34/bold ${FRAME_COLOR:-34}/g" "$SRC/starship/starship.toml" > "$MAIN_TOML"
+  sed 's/bold 34/bold 208/g' "$SRC/starship/starship.toml" > "$SSH_VARIANT"
 }
 
 installer_user() {
   local u=$1 dir=$3 vip sq
   place "$SRC/starship/prompt.sh"      "$dir/prompt.sh"          "$u"
-  place "$SRC/starship/starship.toml"  "$dir/starship.toml"      "$u"
+  place "$MAIN_TOML"                  "$dir/starship.toml"      "$u"
   place "$SSH_VARIANT"                 "$dir/starship-ssh.toml"  "$u"
   vip=${VIP:-$M_VIP}; sq=${SQUARE_LIST:-$M_SQUARE}
   set --
@@ -133,6 +146,6 @@ EOF
 
 installer_smoke() { echo 'test -n "$STARSHIP_SHELL" && starship prompt >/dev/null'; }
 
-installer_cleanup() { [ -n "$SSH_VARIANT" ] && rm -f "$SSH_VARIANT"; return 0; }
+installer_cleanup() { rm -f "$MAIN_TOML" "$SSH_VARIANT"; return 0; }
 
 sps_main "$@"
